@@ -1,0 +1,61 @@
+<header class="ph">
+  <div>
+    <h3>Paramètres de la plateforme</h3>
+    <p>Réservés aux super administrateurs</p>
+  </div>
+</header>
+
+<div class="grid g2">
+  <section class="card">
+    <div class="card-h"><h4>Versements aux gestionnaires</h4></div>
+    <div class="card-b" style="display:grid;gap:12px">
+      <div class="input">
+        <label>Versement automatique</label>
+        <div class="f" style="justify-content:space-between">
+          Activé <sol-toggle [checked]="true" label="Versement automatique" />
+        </div>
+      </div>
+      <div class="grid g2" style="gap:12px">
+        <div class="input"><label>Fréquence</label><div class="f">Quotidienne</div></div>
+        <div class="input"><label>Heure</label><div class="f">06:00</div></div>
+      </div>
+      <div class="input">
+        <label>Montant minimum par versement</label>
+        <div class="f">{{ minimum | fcfa }}</div>
+      </div>
+      <div class="input">
+        <label>Mode par défaut d'un nouveau gestionnaire</label>
+        <div class="f sel">Automatique <sol-icon name="chevd" [size]="16" /></div>
+      </div>
+      <div class="input"><label>Traitement des demandes</label><div class="f">Sous 24 h ouvrées</div></div>
+      <div class="input">
+        <label>Versement hors système</label>
+        <div class="f">Référence et preuve obligatoires</div>
+        <span class="hint">
+          Rôles Super admin et Finance · double validation dès {{ doubleApproval | fcfa }}
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-h"><h4>Abonnements</h4></div>
+    <div class="card-b" style="display:grid;gap:12px">
+      <div class="input"><label>Durée de l'essai gratuit</label><div class="f">30 jours</div></div>
+      <div class="input"><label>Formule de l'essai</label><div class="f">Essentiel</div></div>
+      <div class="input"><label>Relances d'impayé</label><div class="f">J+0, J+3, J+6</div></div>
+      <div class="input">
+        <label>Suspension après</label>
+        <div class="f">{{ suspensionDays }} jours d'impayé</div>
+      </div>
+      <div class="input">
+        <label>Alerte de limite au gestionnaire</label>
+        <div class="f">à 80 % d'utilisation</div>
+      </div>
+      <div class="input">
+        <label>TVA sur les factures d'abonnement</label>
+        <div class="f">{{ vatPercent }} %</div>
+      </div>
+    </div>
+  </section>
+</div>

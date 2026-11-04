@@ -1,0 +1,66 @@
+<div class="app theme-admin">
+  <aside class="side">
+    <div class="logo">
+      <b>SOLIMUS</b>
+      <span>ADMINISTRATION</span>
+    </div>
+
+    @for (group of navigation; track group.title) {
+      <div class="s-sec">{{ group.title }}</div>
+      @for (item of group.items; track item.path) {
+        <a class="s-it" [routerLink]="item.path" routerLinkActive="on"
+           [routerLinkActiveOptions]="{ exact: item.exact ?? false }" [title]="item.label">
+          <sol-icon [name]="item.icon" />
+          <span class="lbl">{{ item.label }}</span>
+          @if (item.badge) {
+            <span class="cnt" [class.r]="item.badgeTone === 'danger'">{{ item.badge }}</span>
+          }
+        </a>
+      }
+    }
+
+    <div class="s-me">
+      <sol-avatar [name]="member.name" [palette]="5" />
+      <span>
+        <b>{{ member.name }}</b>
+        <small>{{ member.roleLabel }}</small>
+      </span>
+      <a class="s-logout" routerLink="/connexion" aria-label="Se déconnecter" title="Se déconnecter"><sol-icon name="logout" [size]="18" /></a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <nav class="crumb" aria-label="Fil d'Ariane">
+        @for (crumb of crumbs(); track crumb.label; let last = $last) {
+          @if (crumb.link && !last) {
+            <a [routerLink]="crumb.link">{{ crumb.label }}</a>
+            <sol-icon name="chev" [size]="14" />
+          } @else {
+            <b>{{ crumb.label }}</b>
+          }
+        }
+      </nav>
+
+      <div class="t-search">
+        <sol-icon name="search" />
+        Rechercher un gestionnaire, un versement…
+      </div>
+
+      <button type="button" class="t-ic" aria-label="Notifications">
+        <sol-icon name="bell" /><span class="dot"></span>
+      </button>
+
+      <div class="t-me">
+        <sol-avatar [name]="member.name" [palette]="5" />
+        <span><b>{{ member.name }}</b><small>Solimus · Opérations</small></span>
+      </div>
+    </header>
+
+    <main class="content" #content>
+      <router-outlet />
+    </main>
+  </div>
+</div>
+
+<sol-toast />

@@ -1,0 +1,74 @@
+:host { display: block; min-height: 100vh; }
+
+.auth {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  background: #fff;
+}
+
+.l {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(17, 22, 24, .35), rgba(17, 22, 24, .9)),
+    url("/assets/property.jpg") 62% 30% / cover,
+    var(--g-dark);
+  color: #fff;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.logo-block { position: relative; align-self: flex-start; padding-bottom: 14px; }
+.logo-block b {
+  display: block;
+  font-style: italic;
+  font-weight: 800;
+  font-size: 34px;
+  letter-spacing: .06em;
+  line-height: 1;
+}
+.logo-block::after {
+  content: "";
+  position: absolute;
+  left: 14%; right: -8%; bottom: 0;
+  height: 2.5px;
+  background: #fff;
+  border-radius: 2px;
+  transform: skewX(-35deg);
+}
+.logo-block span {
+  display: block;
+  font-style: italic;
+  font-size: 15px;
+  letter-spacing: .16em;
+  margin-top: 6px;
+  opacity: .9;
+}
+
+.l h2 {
+  margin: 0;
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+  max-width: 520px;
+}
+.l p {
+  margin: 14px 0 0;
+  font-size: 16px;
+  opacity: .88;
+  max-width: 470px;
+  line-height: 1.5;
+}
+.l small { opacity: .7; }
+
+.r { display: grid; place-items: center; padding: 32px; }
+
+@media (max-width: 900px) {
+  .auth { grid-template-columns: 1fr; }
+  .l { padding: 32px 24px; gap: 20px; }
+  .l h2 { font-size: 26px; }
+}

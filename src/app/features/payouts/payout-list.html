@@ -1,0 +1,117 @@
+<header class="ph">
+  <div>
+    <h3>Versements aux gestionnaires</h3>
+    <p>
+      Le montant intégral des loyers, versé automatiquement par l'API ou par virement
+      hors système enregistré ici
+    </p>
+  </div>
+  <div class="acts">
+    <button type="button" class="btn btn-s" (click)="sheets.open('export', { label: 'Exporter', screen: 'Versements' })">
+      <sol-icon name="down" />Exporter
+    </button>
+    <button type="button" class="btn btn-p" (click)="opened.set(true)">
+      <sol-icon name="send" />Enregistrer un versement
+    </button>
+  </div>
+</header>
+
+<div class="grid g4" style="margin-bottom:16px">
+  <sol-kpi-card label="Versé en octobre" [value]="paidThisMonth() | fcfa: false" unit="FCFA"
+                [note]="payouts().length + ' versements'" icon="check" tone="green" noteTone="positive" />
+  <sol-kpi-card label="Demandes en attente" [value]="pendingTotal() | fcfa: false" unit="FCFA"
+                [note]="pendingTotal() ? '1 demande · Teranga' : 'aucune'" icon="inbox" tone="orange" />
+  <sol-kpi-card label="Bloqué" [value]="blocked.amount | fcfa: false" unit="FCFA"
+                note="Diourbel Habitat · compte non vérifié" icon="lock" tone="red" noteTone="negative" />
+  <sol-kpi-card label="Solde du compte d'encaissement" [value]="summary().owedToManagers | fcfa: false" unit="FCFA"
+                note="égal à ce qui est dû" icon="wallet" tone="blue" />
+</div>
+
+<div class="grid g2" style="margin-bottom:16px">
+  <section class="card">
+    <div class="card-b mode">
+      <sol-toggle [checked]="true" label="Versement automatique" />
+      <div style="flex:1">
+        <b>Versement automatique</b>
+        <p class="hint" style="margin:3px 0 0;line-height:1.5">
+          Chaque jour à 06:00, par l'API de paiement, pour les paiements de la veille.
+          {{ automaticCount() }} gestionnaires · minimum {{ minimum | fcfa }}.
+        </p>
+      </div>
+      <a routerLink="/parametres" class="settings-link">Régler</a>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-b mode">
+      <span class="tint t-p" style="width:34px;height:34px"><sol-icon name="send" [size]="16" /></span>
+      <div style="flex:1">
+        <b>Versement hors système</b>
+        <p class="hint" style="margin:3px 0 0;line-height:1.5">
+          Solimus fait le virement depuis la banque ou Wave Business, puis l'enregistre ici avec sa
+          référence. Utilisé pour les demandes et les cas particuliers.
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="card" style="overflow:hidden">
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>Versement</th><th>Gestionnaire</th><th style="text-align:right">Montant versé</th>
+        <th>Exécution</th><th>Référence du virement</th><th>Statut</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (blockedRow(); as row) {
+        <tr>
+          <td><b style="font-weight:500">—</b><small style="display:block;color:var(--muted);font-size:12px">En attente</small></td>
+          <td>{{ row.managerName }}<small style="display:block;color:var(--muted);font-size:12px">Automatique</small></td>
+          <td class="num" style="text-align:right;font-weight:600">{{ row.amount | fcfa: false }}</td>
+          <td><span class="chip">Automatique</span></td>
+          <td style="color:#555b61">{{ row.reason }}</td>
+          <td><sol-pill tone="red">Bloqué</sol-pill></td>
+          <td style="text-align:right">
+            <button type="button" class="btn btn-s btn-sm" (click)="remind(row.managerName)">
+              <sol-icon name="refresh" />Relancer
+            </button>
+          </td>
+        </tr>
+      }
+      @for (payout of payouts(); track payout.id) {
+        <tr>
+          <td>
+            <b style="font-weight:500">{{ payout.id }}</b>
+            <small style="display:block;color:var(--muted);font-size:12px">
+              {{ payout.executedAt | dateFr: 'dayMonth' }} · {{ payout.executedAt.split('T')[1] }}
+            </small>
+          </td>
+          <td>
+            {{ managerName(payout.managerId) }}
+            <small style="display:block;color:var(--muted);font-size:12px">{{ modeOf(payout.managerId) }}</small>
+          </td>
+          <td class="num" style="text-align:right;font-weight:600">{{ payout.amount | fcfa: false }}</td>
+          <td>
+            @if (payout.execution === 'offPlatform') {
+              <sol-pill tone="purple" [dot]="false">Hors système</sol-pill>
+            } @else { <span class="chip">Automatique</span> }
+          </td>
+          <td style="color:#555b61">{{ payout.reference }}</td>
+          <td><sol-pill tone="green">Versé</sol-pill></td>
+          <td style="text-align:right">
+            <button type="button" class="icon-btn" aria-label="Avis de versement"
+                    (click)="sheets.open('doc', { doc: 'payout-advice', row: 'Avis de versement · ' + payout.id })">
+              <sol-icon name="receipt" />
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (opened()) {
+  <app-payout-dialog (close)="closeDialog()" (recorded)="onRecorded($event)" />
+}

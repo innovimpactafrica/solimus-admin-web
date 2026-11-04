@@ -1,0 +1,56 @@
+/* Solimus design tokens. Extracted from the reference mockup (v10).
+   Visual language taken from the existing Solimus apps (VEFA, Syndic, Prestataire);
+   only the primary colour changes to identify Solimus Gestion. */
+:root {
+  /* Surfaces */
+  --board: #eceae4;          /* review board / outer background */
+  --paper: #f8f7f4;          /* application background */
+  --card: #ffffff;
+  --line: #ecebe7;           /* hairline borders */
+
+  /* Text */
+  --ink: #1f2328;
+  --muted: #6b7177;
+
+  /* Solimus Gestion green */
+  --g: #3f5f55;
+  --g-dark: #2f4a42;
+  --g-soft: #e6efeb;
+
+  /* Solimus Administration (dark shell variant) */
+  --adm: #22292c;
+  --adm-dark: #111618;
+
+  /* Payment providers */
+  --wave-blue: #1dc8fc;
+
+  /* State colours shared across the Solimus family */
+  --ok: #2f8f46;
+  --ok-soft: #ecfdf3;
+  --ok-ink: #067647;
+  --warn: #d9822b;
+  --warn-soft: #fffaeb;
+  --warn-ink: #b54708;
+  --danger: #d63c32;
+  --danger-soft: #fef3f2;
+  --danger-ink: #b42318;
+  --info: #2f6fdc;
+  --info-soft: #eff8ff;
+  --info-ink: #175cd3;
+  --accent: #8b45d6;
+  --accent-soft: #f4f3ff;
+  --accent-ink: #5925dc;
+
+  --font: "Inter", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --radius: 12px;
+  --radius-sm: 8px;
+
+  color-scheme: light;
+}
+
+/* Administration shell: same components, different primary colour. */
+.theme-admin {
+  --g: #22292c;
+  --g-dark: #111618;
+  --g-soft: #f6f7f7;
+}

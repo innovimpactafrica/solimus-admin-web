@@ -1,0 +1,59 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@solimus/ui": [
+        "./src/solimus/ui/index.ts"
+      ],
+      "@solimus/domain": [
+        "./src/solimus/domain/index.ts"
+      ],
+      "@solimus/mocks": [
+        "./src/solimus/mocks/index.ts"
+      ],
+      "@solimus/documents": [
+        "./src/solimus/documents/index.ts"
+      ],
+      "@solimus/domain/*": [
+        "./src/solimus/domain/*"
+      ],
+      "@solimus/mocks/*": [
+        "./src/solimus/mocks/*"
+      ],
+      "@solimus/documents/*": [
+        "./src/solimus/documents/*"
+      ],
+      "@solimus/ui/*": [
+        "./src/solimus/ui/*"
+      ]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "typeCheckHostBindings": true,
+    "strictTemplates": true
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
+}

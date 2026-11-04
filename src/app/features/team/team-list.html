@@ -1,0 +1,56 @@
+<header class="ph">
+  <div>
+    <h3>Équipe Solimus</h3>
+    <p>{{ team.length }} membres · connexion avec code SMS obligatoire</p>
+  </div>
+  <div class="acts">
+    <a class="btn btn-p" routerLink="/equipe/inviter"><sol-icon name="plus" />Inviter un membre</a>
+  </div>
+</header>
+
+<div class="grid g2">
+  <section class="card" style="overflow:hidden">
+    <table class="tbl">
+      <thead><tr><th>Membre</th><th>Rôle</th><th>Dernière connexion</th></tr></thead>
+      <tbody>
+        @for (member of team; track member.id) {
+          <tr>
+            <td>
+              <div class="who">
+                <sol-avatar [name]="member.name" [palette]="member.avatarPalette" />
+                <span><b>{{ member.name }}</b><small>{{ member.email }}</small></span>
+              </div>
+            </td>
+            <td><sol-pill tone="neutral" [dot]="false">{{ member.roleLabel }}</sol-pill></td>
+            <td style="color:#555b61">{{ member.lastSeen }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+
+  <section class="card" style="overflow:hidden">
+    <div class="card-h" style="padding-bottom:12px"><h4>Droits par rôle</h4></div>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th style="text-align:center">Super admin</th><th style="text-align:center">Finance</th>
+          <th style="text-align:center">Support</th><th style="text-align:center">Lecture</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of permissions; track row.action) {
+          <tr>
+            <td class="wr">{{ row.action }}</td>
+            @for (granted of cells(row); track $index) {
+              <td style="text-align:center" [style.color]="granted ? '#2f8f46' : '#c9c5bb'">
+                @if (granted) { <sol-icon name="check" [size]="16" strokeWidth="2.4" /> } @else { — }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</div>

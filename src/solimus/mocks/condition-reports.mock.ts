@@ -1,0 +1,196 @@
+import { ConditionReport } from '../domain/models/condition-report.model';
+
+export const CONDITION_REPORTS: readonly ConditionReport[] = [
+  {
+    id: 'EDLE-034', type: 'entry', status: 'scheduled',
+    propertyRef: 'B-045', propertyLabel: 'F2 · Sacré-Cœur 3', leaseId: 'BAIL-033',
+    tenantName: 'Khady Ndiaye', scheduledAt: '2026-10-31T10:00', agent: 'Serigne Mbacké',
+    rooms: [], photoSeed: 4,
+  },
+  {
+    id: 'EDLS-011', type: 'exit', status: 'scheduled',
+    propertyRef: 'B-052', propertyLabel: 'Local commercial · Plateau', leaseId: 'BAIL-011',
+    tenantName: 'Pharmacie du Port', scheduledAt: '2026-10-31T15:00', agent: 'Serigne Mbacké',
+    rooms: [], comparedWith: 'EDLE-011', photoSeed: 1,
+  },
+  {
+    id: 'EDLE-032', type: 'entry', status: 'capturing',
+    propertyRef: 'B-036', propertyLabel: 'F3 · Hann Maristes', leaseId: 'BAIL-032',
+    tenantName: 'Nogaye Faye', scheduledAt: '2026-10-16T10:00', agent: 'Awa Ndoye',
+    readings: { electricity: 'Senelec Woyofal : crédit restant 12,4 kWh', water: 'SDE : index 03 118 m³', keys: '2 clés porte · 1 télécommande portail' },
+    rooms: [
+      { name: 'Entrée', items: [
+        { label: 'Sol · carrelage', condition: 'good', photoCount: 1 },
+        { label: 'Porte et serrure', condition: 'good', photoCount: 1 },
+        { label: 'Interphone', condition: 'good', photoCount: 1 },
+        { label: 'Éclairage', condition: 'good', photoCount: 1 },
+      ] },
+      { name: 'Séjour', items: [
+        { label: 'Sol · carrelage', condition: 'good', photoCount: 1 },
+        { label: 'Murs · peinture', condition: 'good', photoCount: 1 },
+        { label: 'Plafond', condition: 'good', photoCount: 1 },
+        { label: 'Fenêtres et volets', condition: 'good', photoCount: 1 },
+        { label: 'Prises et interrupteurs', condition: 'good', photoCount: 1 },
+        { label: 'Climatiseur', condition: 'good', observation: 'Fonctionne, télécommande fournie', photoCount: 1 },
+        { label: 'Balcon', condition: 'good', photoCount: 1 },
+      ] },
+      { name: 'Cuisine', items: [
+        { label: 'Plan de travail', condition: 'good', photoCount: 1 },
+        { label: 'Évier et robinetterie', condition: 'good', photoCount: 1 },
+        { label: 'Plaques de cuisson', condition: 'good', photoCount: 1 },
+        { label: 'Hotte', condition: 'good', photoCount: 1 },
+        { label: 'Placards hauts', condition: 'good', photoCount: 1 },
+        { label: 'Placards bas', condition: 'good', photoCount: 1 },
+        { label: 'Sol · carrelage', condition: 'good', photoCount: 1 },
+        { label: 'Murs · faïence', condition: 'good', photoCount: 1 },
+        { label: 'Éclairage', condition: 'good', photoCount: 1 },
+      ] },
+      { name: 'Chambre 1', items: [
+        { label: 'Sol · carrelage', condition: 'good', photoCount: 1 },
+        { label: 'Murs · peinture', condition: 'worn', observation: 'Traces légères derrière le lit', photoCount: 1 },
+        { label: 'Plafond', condition: 'good', photoCount: 1 },
+        { label: 'Fenêtre et volets', condition: 'good', photoCount: 0 },
+        { label: 'Climatiseur Samsung', condition: 'good', observation: 'Fonctionne, télécommande fournie', photoCount: 0 },
+        { label: 'Placard intégré', condition: 'damaged', observation: 'Porte coulissante qui frotte', photoCount: 0 },
+      ] },
+      { name: "Salle d'eau", items: [
+        { label: 'Lavabo', condition: 'good', photoCount: 0 },
+        { label: 'Douche', condition: 'good', photoCount: 0 },
+        { label: 'WC', condition: 'good', photoCount: 0 },
+        { label: 'Faïence', condition: 'good', photoCount: 0 },
+        { label: 'Robinetterie', condition: 'good', photoCount: 0 },
+        { label: 'Miroir', condition: 'good', photoCount: 0 },
+      ] },
+      { name: 'Chambre 2', items: [
+        { label: 'Sol · carrelage', condition: 'good', photoCount: 0 },
+        { label: 'Murs · peinture', condition: 'good', photoCount: 0 },
+        { label: 'Plafond', condition: 'good', photoCount: 0 },
+        { label: 'Fenêtre et volets', condition: 'good', photoCount: 0 },
+        { label: 'Climatiseur', condition: 'good', photoCount: 0 },
+        { label: 'Placard intégré', condition: 'good', photoCount: 0 },
+      ] },
+      { name: 'Balcon', items: [
+        { label: 'Sol', condition: 'good', photoCount: 0 },
+        { label: 'Garde-corps', condition: 'good', photoCount: 0 },
+        { label: 'Baie vitrée', condition: 'good', photoCount: 0 },
+      ] },
+      { name: 'Compteurs et clés', items: [
+        { label: 'Compteur Senelec', condition: 'good', observation: 'Crédit restant : 12,4 kWh', photoCount: 0 },
+        { label: 'Compteur SDE', condition: 'good', observation: 'Index : 03 118 m³', photoCount: 0 },
+        { label: 'Clés remises', condition: 'good', observation: '2 clés porte', photoCount: 0 },
+        { label: 'Télécommande portail', condition: 'good', photoCount: 0 },
+      ] },
+    ],
+    photoSeed: 4,
+  },
+  {
+    id: 'EDLE-035', type: 'entry', status: 'awaitingSignature',
+    propertyRef: 'B-048', propertyLabel: 'Studio meublé · Fann Hock',
+    tenantName: 'Coumba Ndao', scheduledAt: '2026-10-14T11:00', agent: 'Serigne Mbacké',
+    readings: { electricity: 'Senelec Woyofal : 31,0 kWh', water: 'SDE : 00 642 m³', keys: '2 clés porte · 1 badge résidence' },
+    rooms: [
+      { name: 'Entrée', items: [{ label: 'Porte et serrure', condition: 'good', photoCount: 1 }, { label: 'Sol', condition: 'good', photoCount: 1 }] },
+      { name: 'Pièce principale', items: [
+        { label: 'Sol', condition: 'good', photoCount: 1 },
+        { label: 'Murs', condition: 'good', photoCount: 1 },
+        { label: 'Canapé-lit', condition: 'good', observation: 'Fourni', photoCount: 1 },
+        { label: 'Bureau', condition: 'good', observation: 'Fourni', photoCount: 1 },
+        { label: 'Climatiseur', condition: 'good', photoCount: 1 },
+      ] },
+      { name: 'Coin cuisine', items: [
+        { label: 'Réfrigérateur', condition: 'good', photoCount: 1 },
+        { label: 'Plaques', condition: 'good', photoCount: 1 },
+        { label: 'Évier', condition: 'good', photoCount: 1 },
+        { label: 'Placards', condition: 'good', photoCount: 1 },
+      ] },
+      { name: "Salle d'eau", items: [
+        { label: 'Douche', condition: 'worn', observation: 'Joint du bac de douche noirci', photoCount: 1 },
+        { label: 'Lavabo', condition: 'good', photoCount: 1 },
+        { label: 'WC', condition: 'good', photoCount: 1 },
+      ] },
+      { name: 'Compteurs et clés', items: [
+        { label: 'Compteur Senelec', condition: 'good', observation: '31,0 kWh', photoCount: 1 },
+        { label: 'Clés et badge', condition: 'good', photoCount: 1 },
+      ] },
+    ],
+    photoSeed: 3,
+  },
+  {
+    id: 'EDLE-031', type: 'entry', status: 'signed',
+    propertyRef: 'B-014', propertyLabel: 'Appartement F3 · Mermoz', leaseId: 'BAIL-031',
+    tenantName: 'Ibrahima Ndiaye', scheduledAt: '2025-02-01T10:00', agent: 'Awa Ndoye',
+    signedOn: '2025-02-01',
+    readings: { electricity: 'Senelec n° 41-2290-87 : 18 402 kWh', water: 'SDE n° 77012 : 00 412 m³', keys: '2 clés porte · 1 badge parking' },
+    rooms: [
+      { name: 'Entrée', items: [{ label: 'Sol', condition: 'good', photoCount: 1 }, { label: 'Porte', condition: 'good', photoCount: 1 }, { label: 'Éclairage', condition: 'good', photoCount: 1 }] },
+      { name: 'Séjour', items: [
+        { label: 'Sol', condition: 'good', photoCount: 1 }, { label: 'Murs', condition: 'good', photoCount: 1 },
+        { label: 'Plafond', condition: 'good', photoCount: 1 }, { label: 'Baie vitrée', condition: 'good', photoCount: 1 },
+        { label: 'Climatiseur', condition: 'good', photoCount: 1 }, { label: 'Balcon', condition: 'good', photoCount: 1 },
+      ] },
+      { name: 'Cuisine', items: [
+        { label: 'Plaques', condition: 'good', observation: 'Fonctionnelles', photoCount: 1 },
+        { label: 'Hotte', condition: 'good', photoCount: 1 }, { label: 'Évier', condition: 'good', photoCount: 1 },
+        { label: 'Placards', condition: 'good', photoCount: 1 }, { label: 'Sol', condition: 'good', photoCount: 1 },
+      ] },
+      { name: 'Chambre 1', items: [
+        { label: 'Sol', condition: 'good', photoCount: 1 }, { label: 'Murs', condition: 'good', photoCount: 1 },
+        { label: 'Placard', condition: 'good', photoCount: 1 }, { label: 'Climatiseur', condition: 'good', photoCount: 1 },
+      ] },
+      { name: 'Chambre 2', items: [
+        { label: 'Sol', condition: 'good', photoCount: 1 }, { label: 'Murs', condition: 'good', photoCount: 1 },
+        { label: 'Placard', condition: 'worn', observation: 'Porte du placard qui frotte', photoCount: 1 },
+        { label: 'Fenêtre', condition: 'good', photoCount: 1 }, { label: 'Climatiseur', condition: 'good', photoCount: 1 },
+      ] },
+      { name: "Salle d'eau", items: [
+        { label: 'Douche', condition: 'good', photoCount: 1 }, { label: 'Lavabo', condition: 'good', photoCount: 1 },
+        { label: 'WC', condition: 'good', photoCount: 1 }, { label: 'Faïence', condition: 'good', photoCount: 1 },
+      ] },
+      { name: 'Compteurs et clés', items: [
+        { label: 'Compteur Senelec', condition: 'good', observation: '18 402 kWh', photoCount: 1 },
+        { label: 'Compteur SDE', condition: 'good', observation: '00 412 m³', photoCount: 1 },
+        { label: 'Clés', condition: 'good', observation: '2 clés porte', photoCount: 1 },
+        { label: 'Badge parking', condition: 'good', photoCount: 1 },
+      ] },
+    ],
+    photoSeed: 0,
+  },
+  {
+    id: 'EDLS-009', type: 'exit', status: 'signed',
+    propertyRef: 'B-036', propertyLabel: 'Appartement F3 · Hann Maristes', leaseId: 'BAIL-009',
+    tenantName: 'Daouda Sy', scheduledAt: '2026-09-30T09:30', agent: 'Serigne Mbacké',
+    signedOn: '2026-09-30', comparedWith: 'EDLE-009',
+    readings: { electricity: 'Senelec Woyofal : 12,4 kWh', water: 'SDE : 03 118 m³', keys: 'Restituées : 2 clés porte · 1 télécommande portail' },
+    rooms: [
+      { name: 'Entrée', items: [{ label: 'Sol', condition: 'good', photoCount: 1 }, { label: 'Porte', condition: 'good', photoCount: 1 }, { label: 'Éclairage', condition: 'good', photoCount: 1 }] },
+      { name: 'Séjour', items: [
+        { label: 'Sol', condition: 'good', photoCount: 1 },
+        { label: 'Murs · peinture', condition: 'worn', observation: 'Peinture marquée derrière le canapé · usure normale', photoCount: 2 },
+        { label: 'Plafond', condition: 'good', photoCount: 1 }, { label: 'Fenêtres', condition: 'good', photoCount: 1 },
+      ] },
+      { name: 'Cuisine', items: [
+        { label: 'Plaques', condition: 'good', photoCount: 1 }, { label: 'Évier', condition: 'good', photoCount: 1 },
+        { label: 'Placards', condition: 'good', photoCount: 1 }, { label: 'Sol', condition: 'good', photoCount: 1 },
+      ] },
+      { name: 'Chambre 1', items: [
+        { label: 'Sol', condition: 'good', photoCount: 1 }, { label: 'Murs', condition: 'good', photoCount: 1 },
+        { label: 'Placard', condition: 'good', photoCount: 1 },
+      ] },
+      { name: 'Chambre 2', items: [
+        { label: 'Sol', condition: 'good', photoCount: 1 },
+        { label: 'Vitres', condition: 'damaged', observation: 'Deux vitres fêlées · à la charge du locataire', photoCount: 2 },
+        { label: 'Murs', condition: 'good', photoCount: 1 },
+      ] },
+      { name: "Salle d'eau", items: [
+        { label: 'Douche', condition: 'good', photoCount: 1 }, { label: 'Lavabo', condition: 'good', photoCount: 1 },
+        { label: 'WC', condition: 'good', photoCount: 1 },
+      ] },
+      { name: 'Balcon', items: [{ label: 'Sol', condition: 'good', photoCount: 1 }, { label: 'Garde-corps', condition: 'good', photoCount: 1 }] },
+      { name: 'Compteurs et clés', items: [
+        { label: 'Compteur Senelec', condition: 'good', observation: '12,4 kWh', photoCount: 1 },
+        { label: 'Clés restituées', condition: 'good', photoCount: 1 },
+      ] },
+    ],
+    photoSeed: 7,
+  },
+];

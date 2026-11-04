@@ -1,0 +1,56 @@
+<header class="ph">
+  <div>
+    <h3>Journal d'activité</h3>
+    <p>Toutes les opérations sensibles sont tracées et ne peuvent pas être modifiées</p>
+  </div>
+  <div class="acts">
+    <button type="button" class="btn btn-s" (click)="sheets.open('export', { label: 'Exporter', screen: 'Journal d’activité' })">
+      <sol-icon name="down" />Exporter
+    </button>
+  </div>
+</header>
+
+<div class="filters">
+  <div class="f-in">
+    <sol-icon name="search" />
+    <input type="search" placeholder="Rechercher dans le journal…" [value]="search()"
+           (input)="search.set(value($event))" aria-label="Rechercher dans le journal" />
+  </div>
+  <label class="f-sel">Auteur :
+    <select [value]="authorFilter()" (change)="authorFilter.set(value($event))" aria-label="Filtrer par auteur">
+      <option value="">Tous</option>
+      @for (author of authors(); track author) { <option [value]="author">{{ author }}</option> }
+    </select>
+    <sol-icon name="chevd" />
+  </label>
+</div>
+
+<div class="card" style="overflow:hidden">
+  <table class="tbl">
+    <thead><tr><th>Date</th><th>Événement</th><th>Détail</th><th>Auteur</th></tr></thead>
+    <tbody>
+      @for (entry of filtered(); track entry.at) {
+        <tr>
+          <td style="white-space:nowrap;color:#555b61">
+            {{ entry.at | dateFr: 'dayMonth' }} · {{ entry.at.split('T')[1] }}
+          </td>
+          <td>
+            <div class="who">
+              <span class="tint" [class]="toneClass(entry.tone)" style="width:30px;height:30px">
+                <sol-icon [name]="iconOf(entry.icon)" [size]="15" />
+              </span>
+              <b style="font-weight:500">{{ entry.event }}</b>
+            </div>
+          </td>
+          <td class="wr" style="color:#3f4348">{{ entry.detail }}</td>
+          <td>
+            @if (entry.author === 'Système') { <span class="chip">Système</span> }
+            @else { {{ entry.author }} }
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="4" class="hint" style="text-align:center;padding:28px">Aucune entrée ne correspond</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

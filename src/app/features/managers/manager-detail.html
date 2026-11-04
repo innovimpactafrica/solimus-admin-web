@@ -1,0 +1,255 @@
+@let item = manager();
+@if (item) {
+  <header class="ph">
+    <div>
+      <h3>{{ item.name }}</h3>
+      <p>{{ item.city }} · contact : {{ item.contactName }} · abonné depuis le {{ item.subscribedOn | dateFr }}</p>
+    </div>
+    <div class="acts">
+      <sol-pill [tone]="statusTone(item.status)">{{ statusLabel(item.status) }}</sol-pill>
+      <button type="button" class="btn btn-s" (click)="suspend(item.name)"><sol-icon name="pause" />Suspendre</button>
+      <button type="button" class="btn btn-s" (click)="sheets.open('editGest', { row: item.name })">
+        <sol-icon name="pen" />Modifier
+      </button>
+      <a class="btn btn-p" routerLink="/versements/nouveau"><sol-icon name="send" />Enregistrer un versement</a>
+    </div>
+  </header>
+
+  <div class="grid g4" style="margin-bottom:16px">
+    <sol-kpi-card label="Biens gérés" [value]="item.usage.properties.toString()"
+                  [note]="'sur ' + limits().properties + ' · formule ' + planName()" icon="home" tone="blue" />
+    <sol-kpi-card label="Locataires" [value]="month().tenants.toString()"
+                  [note]="month().payments + ' ont payé en octobre'" icon="users" tone="green" noteTone="positive" />
+    <sol-kpi-card label="Encaissé · octobre" [value]="month().collected | fcfa: false" unit="FCFA"
+                  note="reversés intégralement" icon="wallet" tone="green" />
+    <sol-kpi-card [label]="manager()?.cycle === 'yearly' ? 'Abonnement annuel' : 'Abonnement mensuel'"
+                  [value]="subscriptionAmount() | fcfa: false" unit="FCFA"
+                  [note]="subscriptionNote()" [noteTone]="manager()?.status === 'trial' ? 'neutral' : 'positive'" icon="receipt" tone="purple" />
+  </div>
+
+  <nav class="atabs">
+    @for (tab of tabs; track tab.id) {
+      <button type="button" [class.on]="activeTab() === tab.id" (click)="activeTab.set(tab.id)">{{ tab.label }}</button>
+    }
+  </nav>
+
+  @switch (activeTab()) {
+    @case ('overview') {
+      <div class="grid g3">
+        <section class="card">
+          <div class="card-h">
+            <div>
+              <h4>Utilisation de la formule {{ planName() }}</h4>
+              <p>Alerte au gestionnaire à 80 %, ajout bloqué à 100 %</p>
+            </div>
+          </div>
+          <div class="card-b" style="display:grid;gap:14px">
+            @for (limit of usage(); track limit.key) {
+              <div class="lim" [class.warn]="limit.level === 'warning'" [class.full]="limit.level === 'blocked'">
+                <div class="row">
+                  <span>{{ limit.label }}</span>
+                  <b>{{ limit.used.toLocaleString('fr-FR') }} / {{ limit.limit }}{{ limit.key === 'storageGb' ? ' Go' : '' }}</b>
+                </div>
+                <div class="bar-p"><i [style.width.%]="limit.ratio * 100"></i></div>
+              </div>
+            }
+            <div style="display:flex;gap:8px;margin-top:4px">
+              <button type="button" class="btn btn-s" (click)="sheets.open('plans', { row: item.name })">
+                <sol-icon name="layers" />Changer de formule
+              </button>
+              <button type="button" class="btn btn-g" (click)="sheets.open('limits', { row: item.name })">
+                Ajuster les limites
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-h">
+            <div><h4>Abonnement et versements</h4><p>Réglages propres à ce gestionnaire</p></div>
+          </div>
+          <div class="card-b" style="display:grid;gap:14px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <span class="hint">Formule {{ planName() }} · {{ cycleLabel(item.cycle).toLowerCase() }}</span>
+                <div style="font-size:22px;font-weight:600">{{ subscriptionAmount() | fcfa }} {{ cyclePerLabel() }}</div>
+                <span class="hint">Renouvellement le 01/03/2027</span>
+              </div>
+            </div>
+
+            <div class="tg">
+              <div>
+                <b>Facturation annuelle</b>
+                <small>2 mois offerts · désactiver pour repasser au mensuel</small>
+              </div>
+              <sol-toggle [checked]="item.cycle === 'yearly'" label="Facturation annuelle" />
+            </div>
+
+            <div class="input">
+              <label>Mode de versement</label>
+              <div class="seg" style="display:flex">
+                <button type="button" style="flex:1" [class.on]="item.payoutMode === 'automatic'">Automatique</button>
+                <button type="button" style="flex:1" [class.on]="item.payoutMode === 'onRequest'">Sur demande</button>
+              </div>
+              <span class="hint">{{ payoutModeHint() }}</span>
+            </div>
+
+            <div class="input">
+              <label>Comptes de versement</label>
+              @for (account of item.accounts; track account.label) {
+                <div class="f" style="justify-content:space-between">
+                  <span>{{ account.label }}</span>
+                  <sol-pill [tone]="account.verified ? 'green' : 'red'" [dot]="false">
+                    {{ account.verified ? 'Vérifié' : 'Non vérifié' }}
+                  </sol-pill>
+                </div>
+              }
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-h"><div><h4>Octobre 2026</h4><p>{{ month().payments }} paiements de locataires</p></div></div>
+          <div class="card-b" style="display:grid;gap:12px">
+            <div class="calc">
+              <div><span>Loyers encaissés pour lui</span><b>{{ month().collected | fcfa: false }}</b></div>
+              <div><span>Déjà versé</span><span>{{ paidOut() | fcfa: false }}</span></div>
+              <div><span>Solde disponible</span><span>{{ month().owed | fcfa }}</span></div>
+            </div>
+
+            @if (pendingRequest(); as request) {
+              <button type="button" class="alert al-g" style="text-align:left;cursor:pointer;width:100%"
+                      (click)="activeTab.set('requests')">
+                <sol-icon name="inbox" />
+                <div><b>1 demande en attente</b><small>{{ request.id }} · {{ request.amount | fcfa }}</small></div>
+              </button>
+            }
+
+            <a class="btn btn-p" routerLink="/versements/nouveau" style="justify-content:center">
+              <sol-icon name="send" />Enregistrer un versement
+            </a>
+          </div>
+        </section>
+      </div>
+    }
+
+    @case ('requests') {
+      <div class="card" style="overflow:hidden">
+        <table class="tbl nw">
+          <thead><tr><th>Demande</th><th style="text-align:right">Montant</th><th>Compte</th><th>Statut</th></tr></thead>
+          <tbody>
+            @for (request of requests(); track request.id) {
+              <tr>
+                <td>
+                  <b style="font-weight:500">{{ request.id }}</b>
+                  <small style="display:block;color:var(--muted);font-size:12px">
+                    {{ request.requestedAt | dateFr: 'dayMonth' }} · par {{ request.requestedBy }}
+                  </small>
+                </td>
+                <td class="num" style="text-align:right;font-weight:600">{{ request.amount | fcfa: false }}</td>
+                <td>{{ request.account }}</td>
+                <td>
+                  <sol-pill [tone]="request.status === 'paid' ? 'green' : 'orange'">
+                    {{ request.status === 'paid' ? 'Versé' : 'En attente' }}
+                  </sol-pill>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td colspan="4" class="hint" style="text-align:center;padding:28px">Aucune demande</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @case ('collections') {
+      <div class="card" style="overflow:hidden">
+        <table class="tbl nw">
+          <thead>
+            <tr><th>Référence</th><th>Locataire</th><th>Bien</th><th style="text-align:right">Montant</th><th>Versement</th></tr>
+          </thead>
+          <tbody>
+            @for (payment of collections(); track payment.id) {
+              <tr>
+                <td>
+                  <b style="font-weight:500">{{ payment.id }}</b>
+                  <small style="display:block;color:var(--muted);font-size:12px">{{ payment.at | dateFr: 'dayMonth' }}</small>
+                </td>
+                <td>{{ payment.tenant }}</td>
+                <td style="color:#555b61">{{ payment.property }}</td>
+                <td class="num" style="text-align:right">{{ payment.amount | fcfa: false }}</td>
+                <td><sol-pill [tone]="toneOf(payment.tone)">{{ payment.payoutState }}</sol-pill></td>
+              </tr>
+            } @empty {
+              <tr><td colspan="5" class="hint" style="text-align:center;padding:28px">Aucun encaissement ce mois-ci</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @case ('payouts') {
+      <div class="card" style="overflow:hidden">
+        <table class="tbl nw">
+          <thead>
+            <tr><th>Versement</th><th style="text-align:right">Montant</th><th>Exécution</th><th>Référence</th></tr>
+          </thead>
+          <tbody>
+            @for (payout of payouts(); track payout.id) {
+              <tr>
+                <td>
+                  <b style="font-weight:500">{{ payout.id }}</b>
+                  <small style="display:block;color:var(--muted);font-size:12px">
+                    {{ payout.executedAt | dateFr: 'dayMonth' }} · {{ payout.executedAt.split('T')[1] }}
+                  </small>
+                </td>
+                <td class="num" style="text-align:right;font-weight:600">{{ payout.amount | fcfa: false }}</td>
+                <td>
+                  @if (payout.execution === 'offPlatform') {
+                    <sol-pill tone="purple" [dot]="false">Hors système</sol-pill>
+                  } @else { <span class="chip">Automatique</span> }
+                </td>
+                <td style="color:#555b61">{{ payout.reference }}</td>
+              </tr>
+            } @empty {
+              <tr><td colspan="4" class="hint" style="text-align:center;padding:28px">Aucun versement</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @case ('users') {
+      <div class="card" style="overflow:hidden">
+        <table class="tbl">
+          <thead><tr><th>Utilisateur</th><th>Rôle</th><th>Dernière connexion</th><th>Statut</th></tr></thead>
+          <tbody>
+            @for (user of agencyUsers; track user.id) {
+              <tr>
+                <td>
+                  <div class="who">
+                    <sol-avatar [name]="user.name" [palette]="user.avatarPalette" />
+                    <span><b>{{ user.name }}</b><small>{{ user.email }}</small></span>
+                  </div>
+                </td>
+                <td><sol-pill tone="neutral" [dot]="false">{{ roleLabel(user.role) }}</sol-pill></td>
+                <td style="color:#555b61">{{ user.lastSeen }}</td>
+                <td><sol-pill tone="green" [dot]="false">Actif</sol-pill></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        <p class="hint" style="padding:12px 16px;margin:0">
+          {{ item.usage.users }} utilisateurs sur {{ limits().users }} inclus dans la formule {{ planName() }}.
+        </p>
+      </div>
+    }
+  }
+} @else {
+  <div class="empty">
+    <sol-icon name="building" [size]="28" />
+    <b>Gestionnaire introuvable</b>
+    <p>Aucun gestionnaire ne correspond à cet identifiant.</p>
+    <a class="btn btn-s" routerLink="/gestionnaires">Retour à la liste</a>
+  </div>
+}

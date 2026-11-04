@@ -1,0 +1,70 @@
+/* Form styles shared by the login, OTP and forgotten-password screens. */
+:host { display: contents; }
+
+form { width: min(400px, 100%); display: grid; gap: 18px; }
+
+form h3 { margin: 0; font-size: 26px; font-weight: 600; }
+form > div > p { margin: 6px 0 0; color: var(--muted); line-height: 1.5; }
+form > div > p b { color: var(--ink); font-weight: 600; }
+
+.input .f { position: relative; }
+.reveal {
+  border: 0;
+  background: none;
+  color: #8a8f95;
+  cursor: pointer;
+  display: inline-flex;
+  padding: 0;
+}
+
+.row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+
+.remember { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+.remember input { position: absolute; opacity: 0; width: 0; height: 0; }
+.remember .box {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  border: 1.5px solid #c9c5bb;
+  display: grid;
+  place-items: center;
+  color: transparent;
+}
+.remember input:checked + .box { background: var(--g); border-color: var(--g); color: #fff; }
+
+.link {
+  color: var(--g);
+  font-weight: 500;
+  cursor: pointer;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  text-decoration: none;
+}
+.link:disabled { color: var(--muted); cursor: default; }
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  justify-self: start;
+}
+
+.submit { height: 44px; justify-content: center; font-size: 14px; }
+.submit:disabled { opacity: .5; cursor: not-allowed; }
+
+.hint-center { text-align: center; color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+.hint-center b { color: var(--ink); }
+
+.error { color: #c0392b; font-size: 13px; margin: -6px 0 0; }
+
+.badge {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--g-soft);
+  color: var(--g);
+  margin-bottom: 14px;
+}

@@ -1,0 +1,33 @@
+@let doc = data();
+
+<sol-doc-header [agency]="doc.platform" [addressee]="doc.addressee" />
+<sol-doc-title title="FACTURE" [subtitle]="subtitle()" />
+
+<table class="dtb">
+  <thead>
+    <tr>
+      <th class="left">Désignation</th>
+      <th>Qté</th>
+      <th>Prix HT</th>
+      <th>Total HT</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        Abonnement Solimus Gestion · {{ doc.planLabel }}<br>
+        <small>{{ doc.periodLabel }}</small>
+      </td>
+      <td>1</td>
+      <td>{{ doc.amountExclTax | fcfa: false: 2 }}</td>
+      <td>{{ doc.amountExclTax | fcfa: false: 2 }}</td>
+    </tr>
+    <tr><td>TVA 18 %</td><td></td><td></td><td>{{ doc.vat | fcfa: false: 2 }}</td></tr>
+    <tr class="b">
+      <td>Total TTC</td><td></td><td></td><td>{{ totalInclTax() | fcfa: false: 2 }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<sol-doc-kv [fields]="fields()" />
+<sol-doc-footer [date]="doc.dueOn" />

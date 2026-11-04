@@ -1,0 +1,124 @@
+/* ============================================================
+   Solimus Gestion — generated documents (A4 page layout)
+   Every PDF produced by the platform (rent notice, receipt,
+   lease, condition report, mandate, statement, invoice…)
+   renders inside .dpage so the print output matches the mockup.
+   ============================================================ */
+
+.dpage {
+  width: 700px;
+  min-height: 990px;
+  background: #fff;
+  box-shadow: 0 20px 50px -30px rgba(0, 0, 0, .45), 0 0 0 1px #e6e3dc;
+  padding: 46px 52px 70px;
+  position: relative;
+  font-size: 11.5px;
+  color: #222;
+  line-height: 1.5;
+  font-family: var(--font);
+}
+
+/* Header */
+.dh { display: flex; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+.dh-l { display: flex; gap: 12px; max-width: 360px; }
+.dh-logo {
+  width: 46px; height: 46px;
+  border-radius: 10px;
+  background: var(--g);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 15px;
+  flex: none;
+}
+.dh-l b { display: block; font-size: 14px; }
+.dh-l small { display: block; font-size: 9.5px; color: #666; line-height: 1.45; }
+.dh-to { padding-top: 52px; min-width: 200px; font-size: 11.5px; line-height: 1.5; }
+.dh-to b, .dh-to span { display: block; }
+
+.dref { font-size: 10.5px; margin-bottom: 6px; line-height: 1.55; }
+
+/* Title */
+.dt-t { text-align: center; margin: 18px 0; }
+.dt-t h2 { margin: 0; font-size: 19px; color: #555; letter-spacing: .02em; }
+.dt-t p { margin: 3px 0 0; color: #777; font-size: 12px; }
+
+/* Accounting table */
+.dtb { width: 100%; border-collapse: collapse; font-size: 11px; }
+.dtb th {
+  background: #e3e1db;
+  border: 1px solid #9a9890;
+  padding: 4px 7px;
+  font-weight: 700;
+  text-align: right;
+}
+.dtb td { border-left: 1px solid #9a9890; border-right: 1px solid #9a9890; padding: 3px 7px; text-align: right; }
+.dtb td:first-child { text-align: left; }
+.dtb tr.b td { background: #e9e7e1; font-weight: 700; border-top: 1px solid #9a9890; border-bottom: 1px solid #9a9890; }
+.dtb tbody tr:last-child td { border-bottom: 1px solid #9a9890; }
+
+/* Key/value block */
+.dkv { width: 100%; border-collapse: collapse; font-size: 11.5px; margin: 8px 0; }
+.dkv td { padding: 6px 0; border-bottom: 1px solid #eee; vertical-align: top; }
+.dkv td:first-child { color: #666; width: 42%; }
+
+.dnote { font-size: 10.5px; color: #555; margin: 8px 0 0; }
+.dp { margin: 0 0 9px; text-align: justify; }
+
+/* Payment block with QR code */
+.dpay {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  border: 1px dashed #9a9890;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-top: 20px;
+  width: max-content;
+}
+.dpay span { display: block; font-size: 10.5px; color: #444; }
+.dpay b { font-size: 11.5px; }
+
+/* Signatures */
+.dsig { margin: 26px 0 0 auto; width: 260px; text-align: center; display: grid; gap: 2px; }
+.dsig span, .dsig small { font-size: 10.5px; color: #666; }
+.dsig2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 26px; text-align: center; }
+.dsig2 div { display: grid; gap: 2px; border-top: 1px solid #ccc; padding-top: 8px; }
+.dsig2 span, .dsig2 small { font-size: 10.5px; color: #666; }
+
+/* Footer */
+.df {
+  position: absolute;
+  left: 52px; right: 52px; bottom: 28px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #999;
+  padding-top: 6px;
+  font-size: 9.5px;
+  color: #666;
+}
+
+/* Placeholder used in blank templates */
+.dvp { background: #fff3d6; color: #7a5200; border-radius: 3px; padding: 0 4px; font-style: normal; white-space: nowrap; }
+
+/* Viewer shells */
+.docbox {
+  height: 600px;
+  overflow: auto;
+  background: #efede8;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+}
+.docbox .dpage { transform: scale(.86); transform-origin: top center; margin-bottom: -140px; flex: none; }
+
+.dpage-mini { height: 540px; overflow: hidden; border-radius: 10px; box-shadow: 0 0 0 1px var(--line); }
+.dpage-mini .dpage { transform: scale(.54); transform-origin: top left; margin-bottom: -460px; box-shadow: none; }
+
+/* Mobile viewer */
+/* The page renders at .355, i.e. ~282px wide: keep the viewer that wide and
+   centred so a tablet does not show a half empty grey box. */
+.mpdf { height: 390px; width: 298px; max-width: 100%; margin: 0 auto 12px; overflow: auto; background: #e9ece9; border-radius: 12px; padding: 8px; }
+.mpdf .dpage { transform: scale(.355); transform-origin: top left; margin: 0 -452px -640px 0; box-shadow: none; }

@@ -1,0 +1,123 @@
+<header class="ph">
+  <div>
+    <h3>Vue d'ensemble</h3>
+    <p>{{ periodLabel() }} · Tous les gestionnaires abonnés à Solimus Gestion</p>
+  </div>
+  <div class="acts">
+    <div class="seg">
+      @for (option of periods; track option.value) {
+        <button type="button" [class.on]="period() === option.value" (click)="period.set(option.value)">
+          {{ option.label }}
+        </button>
+      }
+    </div>
+    <button type="button" class="btn btn-s" (click)="sheets.open('export', { label: 'Exporter', screen: 'Vue d’ensemble' })">
+      <sol-icon name="down" />Exporter
+    </button>
+    <a class="btn btn-p" routerLink="/versements/nouveau"><sol-icon name="send" />Enregistrer un versement</a>
+  </div>
+</header>
+
+<div class="grid g4" style="margin-bottom:16px">
+  <sol-kpi-card label="Loyers encaissés" [value]="figures().collected | fcfa: false" unit="FCFA"
+                [note]="figures().collectedNote" icon="wallet" tone="green" />
+  <sol-kpi-card label="Dû aux gestionnaires" [value]="figures().owed | fcfa: false" unit="FCFA"
+                note="100 % des loyers, sans commission" icon="building" tone="blue" />
+  <sol-kpi-card label="Reversé aux gestionnaires" [value]="figures().paidOut | fcfa: false" unit="FCFA"
+                [note]="figures().paidOutNote" icon="send" tone="orange" />
+  <sol-kpi-card label="Revenu Solimus · abonnements" [value]="summary().subscriptionRevenueExclTax | fcfa: false"
+                unit="FCFA HT / mois" note="4 actifs dont 1 annuel · 1 essai" icon="layers" tone="purple" />
+</div>
+
+<div class="grid g21" style="margin-bottom:16px">
+  <section class="card">
+    <div class="card-h">
+      <div><h4>Loyers encaissés et reversés</h4><p>Millions de FCFA</p></div>
+      <div class="legend">
+        <span><i style="background:#d9e4df"></i>Encaissés</span>
+        <span><i style="background:var(--g)"></i>Reversés</span>
+      </div>
+    </div>
+    <div class="card-b">
+      <sol-bar-chart [data]="cashflow" [max]="80" [formatTick]="formatMillions"
+                     ariaLabel="Loyers encaissés et reversés sur six mois" />
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-h">
+      <div><h4>Compte d'encaissement</h4><p>Reçoit les loyers payés dans l'application</p></div>
+      <span class="tint t-n" style="width:34px;height:34px"><sol-icon name="wallet" [size]="17" /></span>
+    </div>
+    <div class="card-b" style="display:grid;gap:12px">
+      <div>
+        <span class="hint">Solde disponible</span>
+        <div class="balance">{{ summary().owedToManagers | fcfa: false }} <span>FCFA</span></div>
+      </div>
+      <div class="calc">
+        <div><span>Dû aux gestionnaires</span><b>{{ summary().owedToManagers | fcfa: false }}</b></div>
+        <div>
+          <span style="color:var(--muted)">dont demande en attente (Teranga)</span>
+          <span>{{ pendingRequests() | fcfa: false }}</span>
+        </div>
+        <div>
+          <span style="color:var(--muted)">dont bloqué ({{ blocked.managerName }})</span>
+          <span>{{ blocked.amount | fcfa: false }}</span>
+        </div>
+        <div><span>Prochain lot automatique</span><span>17/10 à 06:00</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="grid g3">
+  <section class="card">
+    <div class="card-h"><h4>Derniers encaissements</h4><a routerLink="/encaissements">Tout voir</a></div>
+    <div class="card-b" style="padding-top:4px">
+      @for (payment of lastCollections; track payment.id) {
+        <div class="list-r">
+          <span class="tint t-g" style="width:32px;height:32px"><sol-icon name="wallet" [size]="16" /></span>
+          <div class="grow">
+            <b>{{ payment.tenant }}</b>
+            <small>{{ managerName(payment.managerId) }} · {{ payment.at | dateFr: 'dayMonth' }} · {{ payment.at.slice(11, 16) }}</small>
+          </div>
+          <b class="num" style="font-size:13px">{{ payment.amount | fcfa }}</b>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-h"><h4>Gestionnaires proches d'une limite</h4><a routerLink="/gestionnaires">Voir</a></div>
+    <div class="card-b" style="display:grid;gap:14px">
+      @for (entry of nearLimit(); track entry.manager.id) {
+        <div>
+          <div class="who">
+            <sol-avatar [name]="entry.manager.name" [palette]="entry.manager.avatarPalette" />
+            <span><b>{{ entry.manager.name }}</b><small>{{ planName(entry.manager.planId) }}</small></span>
+          </div>
+          <div style="display:grid;gap:10px;margin-top:10px">
+            @for (limit of entry.limits; track limit.key) {
+              <div class="lim" [class.warn]="limit.level === 'warning'" [class.full]="limit.level === 'blocked'">
+                <div class="row"><span>{{ limit.label }}</span><b>{{ limit.used }} / {{ limit.limit }}</b></div>
+                <div class="bar-p"><i [style.width.%]="limit.ratio * 100"></i></div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-h"><h4>À traiter</h4><sol-pill tone="red" [dot]="false">{{ todo().length }}</sol-pill></div>
+    <div class="card-b" style="display:grid;gap:10px">
+      @for (item of todo(); track item.title) {
+        <a class="alert" [class]="item.tone" [routerLink]="item.link">
+          <sol-icon [name]="item.icon" />
+          <div><b>{{ item.title }}</b><small>{{ item.detail }}</small></div>
+        </a>
+      }
+    </div>
+  </section>
+</div>

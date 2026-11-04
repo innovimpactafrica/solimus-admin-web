@@ -1,0 +1,38 @@
+@let doc = data();
+
+<sol-doc-header [agency]="doc.agency" [addressee]="doc.addressee" />
+<sol-doc-title [title]="title()" [subtitle]="doc.subtitle + ' · N° ' + doc.reference" />
+
+<sol-doc-kv [fields]="fields()" />
+
+<table class="dtb rooms">
+  <thead>
+    <tr>
+      <th class="left">Pièce</th>
+      <th class="left">État</th>
+      <th class="left">Observations</th>
+      <th>Photos</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (room of doc.rooms; track room.name) {
+      <tr>
+        <td>{{ room.name }}</td>
+        <td class="left">{{ room.condition }}</td>
+        <td class="left">{{ room.observation }}</td>
+        <td>{{ room.photoCount }}</td>
+      </tr>
+    }
+    <tr class="b">
+      <td>{{ doc.rooms.length }} pièces</td>
+      <td></td>
+      <td class="left">
+        {{ remarkCount() }} remarque{{ remarkCount() > 1 ? 's' : '' }}
+      </td>
+      <td>{{ photoCount() }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<sol-doc-signatures [parties]="doc.signatories" />
+<sol-doc-footer [date]="doc.issuedOn" page="1 / 3" />

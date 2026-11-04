@@ -1,0 +1,47 @@
+/* Print rules: only the document page is sent to the printer. */
+@page { size: A4; margin: 0; }
+
+@media print {
+  html, body { background: #fff !important; }
+
+  /* The app chrome is hidden but still lays out, so a tall screen would push a
+     second, blank sheet. Collapse the containers, then clip the body to one
+     page: the document itself is positioned absolutely at the top. */
+  .app, .side, .top, .main, .m-app, .phone, .scr, .m-body {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  html, body {
+    height: 296mm !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body * { visibility: hidden !important; }
+
+  .dpage, .dpage * { visibility: visible !important; }
+
+  .dpage {
+    position: absolute;
+    left: 0; top: 0;
+    width: 210mm;
+    /* A hair under the sheet: at exactly 297mm the rounding spills onto a
+       second, blank page. */
+    min-height: 296mm;
+    margin: 0;
+    padding: 18mm 16mm 22mm;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  /* A break between pages, never after the last one — that would print a blank sheet. */
+  .dpage + .dpage { break-before: page; }
+
+  .docbox, .dpage-mini, .mpdf { height: auto !important; overflow: visible !important; padding: 0 !important; background: none !important; }
+  .docbox .dpage, .dpage-mini .dpage, .mpdf .dpage { transform: none !important; margin: 0 !important; }
+
+  .no-print { display: none !important; }
+}

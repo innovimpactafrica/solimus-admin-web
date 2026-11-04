@@ -1,0 +1,222 @@
+<header class="ph">
+  <div>
+    <h3>{{ title() }}</h3>
+    @if (subtitle()) { <p>{{ subtitle() }}</p> }
+  </div>
+  <div class="acts">
+    <a class="btn btn-s" [routerLink]="cancelLink()">Annuler</a>
+    <button type="button" class="btn btn-s" (click)="saveDraft()">Enregistrer le brouillon</button>
+    <button type="button" class="btn btn-p" (click)="submit()"><sol-icon name="check" />{{ submitLabel() }}</button>
+  </div>
+</header>
+
+@if (draftSaved()) {
+  <div class="alert al-g" style="margin-bottom:16px">
+    <sol-icon name="check" />
+    <div>
+      <b>Brouillon enregistré</b>
+      <small>Vous pouvez quitter et reprendre ce formulaire plus tard.</small>
+    </div>
+  </div>
+}
+
+<div class="fl">
+  <div class="fl-m">
+    @for (section of sections(); track section.title; let index = $index) {
+      <section class="card">
+        <div class="fsec-h">
+          <span class="fn">{{ index + 1 }}</span>
+          <div>
+            <h4>{{ section.title }}</h4>
+            @if (section.subtitle) { <p>{{ section.subtitle }}</p> }
+          </div>
+        </div>
+
+        <div class="fsec-b" [style.grid-template-columns]="columns(section)">
+          @if (section.choices) {
+            <div class="input sp3">
+              <label>{{ section.choiceLabel }}</label>
+              <div class="rc" [style.grid-template-columns]="choiceColumns(section)">
+                @for (choice of section.choices; track choice.label) {
+                  <button type="button" class="rc-i" [class.on]="isChosen(section.title, choice)"
+                          (click)="choose(section.title, choice.label)">
+                    @if (choice.icon) { <sol-icon [name]="choice.icon" /> }
+                    <span>
+                      <b>{{ choice.label }}</b>
+                      @if (choice.hint) { <small>{{ choice.hint }}</small> }
+                    </span>
+                    <i class="rd"></i>
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
+          @for (field of section.fields ?? []; track field.label) {
+            <label class="input" [class.sp3]="field.span === 2">
+              <span>{{ field.label }}@if (field.required) { <i class="req">*</i> }</span>
+
+              @switch (field.kind) {
+                @case ('textarea') {
+                  <span class="f ta">{{ field.value }}</span>
+                }
+                @case ('select') {
+                  <span class="f sel">
+                    <span class="v">{{ field.value }}</span>
+                    <sol-icon name="chevd" [size]="16" />
+                  </span>
+                }
+                @case ('readonly') {
+                  <span class="f ro"><span class="v">{{ field.value }}</span></span>
+                }
+                @case ('locked') {
+                  <span class="f ro">
+                    <span class="v">{{ field.value }}</span>
+                    <sol-icon name="lock" [size]="14" />
+                  </span>
+                }
+                @default {
+                  <span class="f" [class.focus]="field.focus">
+                    @if (field.prefix) { <span class="pre">{{ field.prefix }}</span> }
+                    <span class="v">{{ field.value }}</span>
+                    @if (field.suffix) { <span class="suf">{{ field.suffix }}</span> }
+                  </span>
+                }
+              }
+
+              @if (field.hint) { <span class="hint">{{ field.hint }}</span> }
+            </label>
+          }
+
+          @if (section.chips) {
+            <div class="input sp3">
+              <label>{{ section.chipLabel }}</label>
+              <div class="cs">
+                @for (chip of section.chips; track chip.label) {
+                  <button type="button" class="cs-i" [class.on]="isChipOn(section.title, chip)"
+                          (click)="toggleChip(section.title, chip)">
+                    <sol-icon [name]="isChipOn(section.title, chip) ? 'check' : 'plus'" />{{ chip.label }}
+                  </button>
+                }
+              </div>
+              @if (section.chipHint) { <span class="hint">{{ section.chipHint }}</span> }
+            </div>
+          }
+
+          @for (upload of section.uploads ?? []; track upload.label) {
+            <div class="input sp3">
+              <label>{{ upload.label }}</label>
+              <div class="upl">
+                @if (upload.photos) {
+                  <div class="upl-g">
+                    @for (index of range(upload.photos); track index) {
+                      <div class="photo" [solPhoto]="index" style="aspect-ratio:1;border-radius:8px">
+                        @if (index === 0) { <span class="cover">Couverture</span> }
+                      </div>
+                    }
+                    <button type="button" class="upl-add" (click)="toast.show('Photo ajoutée')">
+                      <sol-icon name="camera" [size]="20" /><small>Ajouter</small>
+                    </button>
+                  </div>
+                }
+                @if (upload.files) {
+                  <div class="upl-f">
+                    @for (file of upload.files; track file.name) {
+                      <span class="upl-file">
+                        <span class="file" [class]="'f-' + file.kind" style="width:26px;height:32px;font-size:8px">
+                          {{ file.kind.toUpperCase() }}
+                        </span>
+                        <span><b>{{ file.name }}</b><small>{{ file.meta }}</small></span>
+                      </span>
+                    }
+                    <button type="button" class="upl-drop" (click)="toast.show('Fichier déposé')">
+                      <sol-icon name="up" [size]="18" />
+                      <span><b>Déposer un fichier</b><small>PDF, JPG ou PNG · 10 Mo max.</small></span>
+                    </button>
+                  </div>
+                }
+              </div>
+              @if (upload.hint) { <span class="hint">{{ upload.hint }}</span> }
+            </div>
+          }
+
+          @for (toggle of section.toggles ?? []; track toggle.label) {
+            <div class="tg sp3">
+              <div>
+                <b>{{ toggle.label }}</b>
+                @if (toggle.hint) { <small>{{ toggle.hint }}</small> }
+              </div>
+              <sol-toggle [checked]="toggle.enabled ?? false" [label]="toggle.label" />
+            </div>
+          }
+
+          @if (section.note; as note) {
+            <div class="alert sp3" [class]="note.tone">
+              <sol-icon [name]="note.icon" />
+              <div><b>{{ note.title }}</b><small>{{ note.detail }}</small></div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+  </div>
+
+  <aside class="fl-a">
+    @if (aside().steps; as steps) {
+      <section class="card">
+        <div class="card-h" style="padding-bottom:6px">
+          <h4>Étapes</h4>
+          <span class="hint">{{ aside().currentStep ?? steps.length }} / {{ steps.length }}</span>
+        </div>
+        <ol class="fsteps">
+          @for (step of steps; track step; let index = $index) {
+            <li [class.done]="index + 1 < (aside().currentStep ?? steps.length)"
+                [class.cur]="index + 1 === (aside().currentStep ?? steps.length)">
+              <i>
+                @if (index + 1 < (aside().currentStep ?? steps.length)) { <sol-icon name="check" [size]="12" strokeWidth="3" /> }
+                @else { {{ index + 1 }} }
+              </i>
+              {{ step }}
+            </li>
+          }
+        </ol>
+      </section>
+    }
+
+    @if (aside().summary; as summary) {
+      <section class="card">
+        <div class="card-h"><h4>{{ aside().summaryTitle ?? 'Récapitulatif' }}</h4></div>
+        <div class="card-b" style="display:grid;gap:12px;padding-top:2px">
+          <div class="calc">
+            @for (line of summary; track line.label) {
+              <div><span>{{ line.label }}</span><span>{{ line.value }}</span></div>
+            }
+          </div>
+          @if (aside().summaryNote) { <p class="hint" style="margin:0;line-height:1.5">{{ aside().summaryNote }}</p> }
+        </div>
+      </section>
+    }
+
+    @if (aside().limitLabel) {
+      <section class="card">
+        <div class="card-h"><h4>{{ aside().limitTitle ?? 'Formule Pro' }}</h4></div>
+        <div class="card-b" style="display:grid;gap:12px;padding-top:2px">
+          <div class="lim" [class.warn]="limitLevel() === 'warning'" [class.full]="limitLevel() === 'blocked'">
+            <div class="row">
+              <span>{{ aside().limitLabel }}</span>
+              <b>{{ aside().limitUsed }} / {{ aside().limitMax }}</b>
+            </div>
+            <div class="bar-p"><i [style.width.%]="limitRatio() * 100"></i></div>
+          </div>
+          @if (aside().limitNote) {
+            <p class="hint" style="margin:0" [style.color]="limitLevel() === 'ok' ? null : '#b54708'">
+              {{ aside().limitNote }}
+            </p>
+          }
+        </div>
+      </section>
+    }
+
+    <ng-content />
+  </aside>
+</div>

@@ -1,0 +1,80 @@
+<header class="ph">
+  <div>
+    <h3>Plans d'abonnement</h3>
+    <p>Seule source de revenu de Solimus : aucune commission n'est prise sur les loyers</p>
+  </div>
+  <div class="acts">
+    <div class="tg" style="padding:7px 12px;gap:12px">
+      <b style="font-size:13px">Afficher les prix annuels</b>
+      <sol-toggle [(checked)]="yearly" label="Prix annuels" />
+    </div>
+    <button type="button" class="btn btn-p" (click)="toast.show('Nouvelle formule · brouillon créé')">
+      <sol-icon name="plus" />Créer une formule
+    </button>
+  </div>
+</header>
+
+<div class="grid g3" style="margin-bottom:16px">
+  @for (plan of plans(); track plan.id) {
+    <article class="card plan" [class.current]="plan.id === 'pro'">
+      <header>
+        <h4>{{ plan.name }}</h4>
+        <span class="hint">{{ managerCount(plan.id) }} gestionnaire{{ managerCount(plan.id) > 1 ? 's' : '' }}</span>
+      </header>
+
+      <div>
+        @if (yearly()) {
+          <span class="amount">{{ plan.yearlyExclTax | fcfa: false }}</span> <span class="hint">FCFA HT / an</span>
+          <div class="hint">
+            soit {{ monthlyEquivalent(plan.yearlyExclTax) | fcfa: false }} FCFA HT / mois · 2 mois offerts
+          </div>
+        } @else {
+          <span class="amount">{{ plan.monthlyExclTax | fcfa: false }}</span> <span class="hint">FCFA HT / mois</span>
+          <div class="hint">ou {{ plan.yearlyExclTax | fcfa: false }} FCFA HT / an · 2 mois offerts</div>
+        }
+      </div>
+
+      <div class="limits">
+        <div><span class="hint">Propriétaires</span><div class="figure">{{ plan.limits.owners }}</div></div>
+        <div><span class="hint">Biens</span><div class="figure">{{ plan.limits.properties }}</div></div>
+        <div><span class="hint">Utilisateurs</span><div class="figure">{{ plan.limits.users }}</div></div>
+        <div><span class="hint">Stockage</span><div class="figure">{{ plan.limits.storageGb }} Go</div></div>
+      </div>
+
+      <div class="hint">Locataires illimités · aucune commission sur les loyers</div>
+
+      <ul>
+        @for (feature of plan.features; track feature) { <li>{{ feature }}</li> }
+      </ul>
+
+      <a class="btn btn-s" [routerLink]="['/plans', plan.id]" style="justify-content:center">
+        <sol-icon name="pen" />Modifier la formule
+      </a>
+    </article>
+  }
+</div>
+
+<div class="grid g2">
+  <section class="card">
+    <div class="card-h"><h4>Quand une limite est atteinte</h4></div>
+    <div class="card-b" style="padding-top:4px">
+      @for (rule of limitRules; track rule.label) {
+        <div class="list-r">
+          <sol-pill [tone]="rule.tone" [dot]="false">{{ rule.label }}</sol-pill>
+          <div class="grow"><small style="color:#3f4348;font-size:13px">{{ rule.detail }}</small></div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-h"><h4>Essai et paiement de l'abonnement</h4></div>
+    <div class="card-b" style="padding-top:4px">
+      @for (rule of billingRules; track rule.label) {
+        <div class="list-r">
+          <div class="grow"><b>{{ rule.label }}</b><small>{{ rule.detail }}</small></div>
+        </div>
+      }
+    </div>
+  </section>
+</div>

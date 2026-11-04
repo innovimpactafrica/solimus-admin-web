@@ -1,0 +1,82 @@
+<header class="ph">
+  <div>
+    <h3>Demandes de paiement</h3>
+    <p>Envoyées par les gestionnaires en mode « sur demande » depuis leur espace Finances</p>
+  </div>
+  <div class="acts">
+    <button type="button" class="btn btn-s" (click)="sheets.open('export', { label: 'Exporter', screen: 'Demandes de paiement' })">
+      <sol-icon name="down" />Exporter
+    </button>
+  </div>
+</header>
+
+<div class="grid g4" style="margin-bottom:16px">
+  <sol-kpi-card label="En attente" [value]="pending().length.toString()"
+                [note]="pendingTotal() ? (pendingTotal() | fcfa) + ' · Teranga' : 'aucune demande à traiter'"
+                icon="inbox" tone="orange" />
+  <sol-kpi-card label="Traitées en octobre" [value]="paidThisMonth().length.toString()"
+                [note]="paidTotal() | fcfa" icon="check" tone="green" noteTone="positive" />
+  <sol-kpi-card label="Délai moyen" value="5 h 40" note="engagement : 24 h ouvrées" icon="clock" tone="blue" />
+  <sol-kpi-card label="Gestionnaires sur demande" [value]="onRequestCount().toString()"
+                [note]="automaticCount() + ' en versement automatique'" icon="building" tone="neutral" />
+</div>
+
+<section class="card" style="margin-bottom:16px">
+  <div class="steps-grid">
+    @for (step of procedure; track step.n) {
+      <div>
+        <span class="fsn">{{ step.n }}</span>
+        <span>{{ step.label }}</span>
+      </div>
+    }
+  </div>
+</section>
+
+<div class="card" style="overflow:hidden">
+  <table class="tbl">
+    <thead>
+      <tr><th>Demande</th><th>Gestionnaire</th><th style="text-align:right">Montant</th><th>Compte de réception</th><th>Statut</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (request of requests(); track request.id) {
+        <tr>
+          <td>
+            <b style="font-weight:500">{{ request.id }}</b>
+            <small style="display:block;color:var(--muted);font-size:12px">
+              {{ request.requestedAt | dateFr: 'dayMonth' }} · {{ request.requestedAt.split('T')[1] }} · par {{ request.requestedBy }}
+            </small>
+          </td>
+          <td>{{ managerName(request.managerId) }}</td>
+          <td class="num" style="text-align:right;font-weight:600">{{ request.amount | fcfa: false }}</td>
+          <td>{{ request.account }}</td>
+          <td>
+            <sol-pill [tone]="request.status === 'paid' ? 'green' : 'orange'">
+              {{ request.status === 'paid' ? 'Versé' : 'En attente' }}
+            </sol-pill>
+            <small style="display:block;color:var(--muted);font-size:12px;margin-top:3px">
+              {{ request.status === 'paid' ? request.payoutId : 'Solde ' + (available(request.managerId) | fcfa) }}
+            </small>
+          </td>
+          <td style="text-align:right">
+            @if (request.status === 'processing') {
+              <button type="button" class="btn btn-p btn-sm" (click)="settle(request)">
+                <sol-icon name="check" />Marquer comme versé
+              </button>
+            } @else {
+              <button type="button" class="icon-btn" aria-label="Avis de versement"
+                      (click)="sheets.open('doc', { doc: 'payout-advice', row: 'Avis de versement · ' + request.payoutId })">
+                <sol-icon name="receipt" />
+              </button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (settling(); as request) {
+  <app-payout-dialog [request]="request" [managerName]="managerName(request.managerId)"
+                     [available]="available(request.managerId)"
+                     (close)="settling.set(null)" (recorded)="onRecorded($event)" />
+}

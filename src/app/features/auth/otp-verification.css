@@ -1,0 +1,27 @@
+/* ng-otp-input renders its boxes in its own view: reach them with ::ng-deep. */
+:host ::ng-deep .otp .n-o-c { justify-content: space-between; gap: 10px; }
+
+:host ::ng-deep .otp .otp-input.otp-box {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  max-width: 56px;
+  height: 54px;
+  margin: 0;
+  border: 1.5px solid #dedad2;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  background: #fff;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+:host ::ng-deep .otp .otp-input.otp-box:focus {
+  border-color: var(--g);
+  box-shadow: 0 0 0 3px var(--g-soft);
+}
+
+:host ::ng-deep .otp .ng-otp-input-wrapper:focus { outline: none; }

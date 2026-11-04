@@ -1,0 +1,39 @@
+@let doc = data();
+
+<sol-doc-header [agency]="doc.contractor" [addressee]="doc.addressee" />
+
+<p class="dref">
+  <b>Dossier :</b> {{ doc.incidentLine }}<br>
+  <b>Lieu :</b> {{ doc.placeLine }}
+</p>
+
+<sol-doc-title title="DEVIS" [subtitle]="'N° ' + doc.reference" />
+
+<table class="dtb">
+  <thead>
+    <tr>
+      <th class="left">Désignation</th>
+      <th>Qté</th>
+      <th>Prix unitaire</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of doc.items; track item.label) {
+      <tr>
+        <td>{{ item.label }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.unitPrice | fcfa: false: 2 }}</td>
+        <td>{{ item.total | fcfa: false: 2 }}</td>
+      </tr>
+    }
+    <tr><td>Total HT</td><td></td><td></td><td>{{ doc.totalExclTax | fcfa: false: 2 }}</td></tr>
+    <tr><td>TVA 18 %</td><td></td><td></td><td>{{ doc.vat | fcfa: false: 2 }}</td></tr>
+    <tr class="b">
+      <td>Total TTC</td><td></td><td></td><td>{{ doc.totalInclTax | fcfa: false: 2 }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<sol-doc-kv [fields]="fields()" />
+<sol-doc-footer [date]="doc.issuedOn" />

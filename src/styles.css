@@ -1,0 +1,2 @@
+/* Global stylesheet. The Solimus theme lives in ./solimus/theme. */
+@import "./solimus/theme/index.css";

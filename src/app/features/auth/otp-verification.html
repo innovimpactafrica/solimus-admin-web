@@ -1,0 +1,27 @@
+<app-auth-layout>
+  <form (submit)="$event.preventDefault(); verify()">
+    <a class="link back" routerLink="/connexion"><sol-icon name="back" [size]="16" /> Retour</a>
+
+    <div>
+      <span class="badge"><sol-icon name="shield" [size]="22" /></span>
+      <h3>Vérification</h3>
+      <p>Saisissez le code à 6 chiffres envoyé à <b>{{ login }}</b>.</p>
+    </div>
+
+    <ng-otp-input [formControl]="code" [config]="config" />
+
+    <button type="submit" class="btn btn-p submit" [disabled]="code.invalid || verifying()">
+      {{ verifying() ? 'Vérification…' : 'Vérifier le code' }}
+    </button>
+
+    <p class="hint-center">
+      @if (countdown() > 0) {
+        @if (resent()) { Nouveau code envoyé. }
+        Renvoyer le code dans <b>{{ countdown() }} s</b>
+      } @else {
+        Vous n'avez rien reçu ?
+        <button type="button" class="link" (click)="resend()">Renvoyer le code</button>
+      }
+    </p>
+  </form>
+</app-auth-layout>

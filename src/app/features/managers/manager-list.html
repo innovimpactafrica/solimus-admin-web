@@ -1,0 +1,94 @@
+<header class="ph">
+  <div>
+    <h3>Gestionnaires</h3>
+    <p>{{ managers().length }} agences abonnées · 346 biens · 70 propriétaires · 299 locataires</p>
+  </div>
+  <div class="acts">
+    <button type="button" class="btn btn-s" (click)="sheets.open('export', { label: 'Exporter', screen: 'Gestionnaires' })">
+      <sol-icon name="down" />Exporter
+    </button>
+    <a class="btn btn-p" routerLink="/gestionnaires/nouveau"><sol-icon name="plus" />Ajouter un gestionnaire</a>
+  </div>
+</header>
+
+<div class="filters">
+  <div class="f-in">
+    <sol-icon name="search" />
+    <input type="search" placeholder="Rechercher une agence, un contact…" [value]="search()"
+           (input)="search.set(value($event))" aria-label="Rechercher un gestionnaire" />
+  </div>
+  <label class="f-sel">Formule :
+    <select [value]="planFilter()" (change)="planFilter.set(value($event))" aria-label="Filtrer par formule">
+      <option value="">Toutes</option>
+      @for (plan of plans(); track plan.id) { <option [value]="plan.id">{{ plan.name }}</option> }
+    </select>
+    <sol-icon name="chevd" />
+  </label>
+  <label class="f-sel">Statut :
+    <select [value]="statusFilter()" (change)="statusFilter.set(value($event))" aria-label="Filtrer par statut">
+      <option value="">Tous</option>
+      <option value="active">Actif</option>
+      <option value="trial">Essai</option>
+      <option value="suspended">Suspendu</option>
+    </select>
+    <sol-icon name="chevd" />
+  </label>
+</div>
+
+<div class="card" style="overflow:hidden">
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>Gestionnaire</th><th>Formule</th><th>Propriétaires</th><th>Biens</th>
+        <th>Abonnement</th><th style="text-align:right">Encaissé · oct.</th><th>Versement</th><th>Statut</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (manager of filtered(); track manager.id) {
+        <tr class="click" [routerLink]="['/gestionnaires', manager.id]">
+          <td>
+            <div class="who">
+              <sol-avatar [name]="manager.name" [palette]="manager.avatarPalette" />
+              <span><b>{{ manager.name }}</b><small>{{ manager.city }}</small></span>
+            </div>
+          </td>
+          <td><span class="chip" style="font-weight:600">{{ planName(manager.planId) }}</span></td>
+          <td>
+            <div class="gauge">
+              <div class="row">
+                <span>{{ manager.usage.owners }} / {{ limitOf(manager, 'owners') }}</span>
+                @if (levelOf(manager, 'owners'); as level) {
+                  @if (level !== 'ok') {
+                    <b [style.color]="level === 'blocked' ? '#b42318' : '#b54708'">
+                      {{ level === 'blocked' ? 'Limite' : ratioOf(manager, 'owners') + ' %' }}
+                    </b>
+                  }
+                }
+              </div>
+              <div class="bar-p"><i [style.width.%]="ratioOf(manager, 'owners')"
+                                    [style.background]="barColor(levelOf(manager, 'owners'))"></i></div>
+            </div>
+          </td>
+          <td>
+            <div class="gauge">
+              <div class="row"><span>{{ manager.usage.properties }} / {{ limitOf(manager, 'properties') }}</span></div>
+              <div class="bar-p"><i [style.width.%]="ratioOf(manager, 'properties')"
+                                    [style.background]="barColor(levelOf(manager, 'properties'))"></i></div>
+            </div>
+          </td>
+          <td>{{ cycleLabel(manager.cycle) }}</td>
+          <td class="num" style="text-align:right">{{ month(manager.id).collected | fcfa: false }}</td>
+          <td>
+            {{ payoutMode(manager.payoutMode) }}
+            @if (!verified(manager)) {
+              <small style="display:block;color:#b42318;font-size:11.5px">compte non vérifié</small>
+            }
+          </td>
+          <td><sol-pill [tone]="statusTone(manager.status)">{{ statusLabel(manager.status) }}</sol-pill></td>
+        </tr>
+      } @empty {
+        <tr><td colspan="8" class="hint" style="text-align:center;padding:28px">Aucun gestionnaire ne correspond</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

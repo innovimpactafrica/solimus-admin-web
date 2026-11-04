@@ -1,0 +1,77 @@
+<header class="ph">
+  <div>
+    <h3>Facturation des abonnements · Octobre 2026</h3>
+    <p>Mensuel le 1er du mois ou annuel à la date anniversaire · paiement en ligne</p>
+  </div>
+  <div class="acts">
+    <button type="button" class="btn btn-s" (click)="sheets.open('export', { label: 'Exporter', screen: 'Facturation' })">
+      <sol-icon name="down" />Exporter
+    </button>
+  </div>
+</header>
+
+<div class="grid g4" style="margin-bottom:16px">
+  <sol-kpi-card label="Revenu d'abonnement" [value]="monthlyRevenue() | fcfa: false" unit="FCFA HT / mois"
+                note="3 mensuels · 1 annuel" icon="layers" tone="green" />
+  <sol-kpi-card label="Factures d'octobre payées" [value]="paidLabel()"
+                note="Teranga en annuel jusqu'en mars" icon="check" tone="blue" noteTone="positive" />
+  <sol-kpi-card label="Impayés" [value]="unpaidInclTax() | fcfa: false" unit="FCFA TTC"
+                note="1 compte suspendu" icon="alert" tone="red" noteTone="negative" />
+  <sol-kpi-card label="Essais en cours" value="1" note="fin le 31/10 · Diourbel Habitat" icon="clock" tone="orange" />
+</div>
+
+<div class="card" style="overflow:hidden">
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>Facture</th><th>Gestionnaire</th><th>Formule</th>
+        <th style="text-align:right">Montant HT</th><th>Payée le</th><th>Statut</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (invoice of invoices(); track invoice.id) {
+        <tr>
+          <td><b style="font-weight:500">{{ invoice.id }}</b></td>
+          <td>
+            <div class="who">
+              <sol-avatar [name]="managerName(invoice.managerId)" [palette]="palette(invoice.managerId)" />
+              <span><b>{{ managerName(invoice.managerId) }}</b></span>
+            </div>
+          </td>
+          <td>{{ invoice.label }}</td>
+          <td class="num" style="text-align:right">{{ invoice.amountExclTax | fcfa }}</td>
+          <td style="color:#555b61">{{ invoice.paidOn ? (invoice.paidOn | dateFr) : '—' }}</td>
+          <td>
+            <sol-pill [tone]="invoice.status === 'paid' ? 'green' : 'red'">
+              {{ invoice.status === 'paid' ? 'Payée' : 'Impayée' }}
+            </sol-pill>
+          </td>
+          <td style="text-align:right">
+            @if (invoice.status === 'paid') {
+              <button type="button" class="icon-btn" aria-label="Voir la facture"
+                      (click)="sheets.open('doc', { doc: 'invoice', row: 'Facture ' + invoice.id })"><sol-icon name="eye" /></button>
+            } @else {
+              <button type="button" class="btn btn-s btn-sm" (click)="remind(invoice.managerId)">
+                <sol-icon name="send" />Relancer
+              </button>
+            }
+          </td>
+        </tr>
+      }
+      <tr>
+        <td>—</td>
+        <td>
+          <div class="who">
+            <sol-avatar name="Diourbel Habitat" [palette]="3" />
+            <span><b>Diourbel Habitat</b></span>
+          </div>
+        </td>
+        <td>Essai Essentiel</td>
+        <td class="num" style="text-align:right">—</td>
+        <td style="color:#555b61">—</td>
+        <td><sol-pill tone="blue">Essai jusqu'au 31/10</sol-pill></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

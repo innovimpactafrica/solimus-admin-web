@@ -1,0 +1,97 @@
+@let item = plan();
+@if (item) {
+  <header class="ph">
+    <div>
+      <h3>Formule {{ item.name }}</h3>
+      <p>{{ subscribers() }}</p>
+    </div>
+    <div class="acts">
+      <a class="btn btn-s" routerLink="/plans">Annuler</a>
+      <button type="button" class="btn btn-p" (click)="save(item.name)"><sol-icon name="check" />Enregistrer</button>
+    </div>
+  </header>
+
+  <div class="editor">
+    <section class="card">
+      <div class="card-h"><h4>Tarif</h4></div>
+      <div class="card-b" style="display:grid;gap:14px">
+        <label class="input"><span>Nom de la formule</span><span class="f"><span class="v">{{ item.name }}</span></span></label>
+        <div class="grid g2" style="gap:12px">
+          <label class="input">
+            <span>Prix mensuel</span>
+            <span class="f" style="justify-content:space-between">
+              {{ item.monthlyExclTax | fcfa: false }} <span class="hint">FCFA</span>
+            </span>
+          </label>
+          <label class="input">
+            <span>Prix annuel</span>
+            <span class="f" style="justify-content:space-between">
+              {{ item.yearlyExclTax | fcfa: false }} <span class="hint">FCFA</span>
+            </span>
+          </label>
+        </div>
+        <div class="tg">
+          <div>
+            <b>Proposer la facturation annuelle</b>
+            <small>Le gestionnaire choisit mensuel ou annuel à l'inscription ou dans son abonnement</small>
+          </div>
+          <sol-toggle [checked]="true" label="Facturation annuelle" />
+        </div>
+        <div class="input">
+          <label>Visible à l'inscription</label>
+          <div class="f" style="justify-content:space-between">
+            Oui, proposée sur solimus.sn
+            <sol-toggle [checked]="item.visibleOnWebsite" label="Visible à l'inscription" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-h"><h4>Limites</h4></div>
+      <div class="card-b" style="display:grid;gap:14px">
+        @for (limit of limitRows(); track limit.label) {
+          <label class="input">
+            <span>{{ limit.label }}</span>
+            <span class="f" style="justify-content:space-between">
+              {{ limit.value }} <span class="hint">{{ limit.usage }}</span>
+            </span>
+          </label>
+        }
+        <div class="input">
+          <label>Locataires</label>
+          <div class="f" style="justify-content:space-between">
+            Illimités <sol-toggle [checked]="true" label="Locataires illimités" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="display:grid;gap:16px">
+      <section class="card">
+        <div class="card-h"><h4>Fonctionnalités incluses</h4></div>
+        <div class="card-b" style="padding-top:2px">
+          @for (feature of allFeatures; track feature) {
+            <div class="chk">
+              <i [class.on]="includes(feature)">
+                @if (includes(feature)) { <sol-icon name="check" [size]="11" strokeWidth="3" /> }
+              </i>
+              {{ feature }}
+            </div>
+          }
+        </div>
+      </section>
+
+      <div class="alert al-o">
+        <sol-icon name="alert" />
+        <div>
+          <b>Effet immédiat</b>
+          <small>
+            Une baisse de limite ne supprime aucune donnée. Un gestionnaire au-delà de la nouvelle limite
+            ne peut plus ajouter d'élément jusqu'à repasser en dessous.
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+}

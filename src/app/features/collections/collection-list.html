@@ -1,0 +1,74 @@
+<header class="ph">
+  <div>
+    <h3>Encaissements · Octobre 2026</h3>
+    <p>
+      Chaque paiement de locataire arrive sur le compte d'encaissement de Solimus
+      puis est reversé intégralement au gestionnaire
+    </p>
+  </div>
+  <div class="acts">
+    <button type="button" class="btn btn-s" (click)="sheets.open('export', { label: 'Exporter', screen: 'Encaissements' })">
+      <sol-icon name="down" />Exporter
+    </button>
+  </div>
+</header>
+
+<div class="grid g4" style="margin-bottom:16px">
+  <sol-kpi-card label="Encaissé" [value]="summary().collected | fcfa: false" unit="FCFA"
+                [note]="summary().paymentCount + ' paiements'" icon="wallet" tone="green" />
+  <sol-kpi-card label="Reversé aux gestionnaires" [value]="summary().paidOut | fcfa: false" unit="FCFA"
+                note="100 % des loyers encaissés" icon="send" tone="neutral" />
+  <sol-kpi-card label="Restant dû" [value]="summary().owedToManagers | fcfa: false" unit="FCFA"
+                note="demandes, lots et comptes bloqués" icon="clock" tone="orange" />
+  <sol-kpi-card label="Paiements échoués" value="3" note="non débités · locataires notifiés"
+                icon="alert" tone="orange" />
+</div>
+
+<div class="filters">
+  <div class="f-in">
+    <sol-icon name="search" />
+    <input type="search" placeholder="Référence, locataire…" [value]="search()"
+           (input)="search.set(value($event))" aria-label="Rechercher un encaissement" />
+  </div>
+  <label class="f-sel">Gestionnaire :
+    <select [value]="managerFilter()" (change)="managerFilter.set(value($event))" aria-label="Filtrer par gestionnaire">
+      <option value="">Tous</option>
+      @for (manager of managers(); track manager.id) { <option [value]="manager.id">{{ manager.name }}</option> }
+    </select>
+    <sol-icon name="chevd" />
+  </label>
+  <span class="f-sel">Période : Octobre 2026 <sol-icon name="chevd" /></span>
+</div>
+
+<div class="card" style="overflow:hidden">
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>Référence</th><th>Locataire</th><th>Gestionnaire</th>
+        <th style="text-align:right">Montant</th><th style="text-align:right">Dû au gestionnaire</th><th>Versement</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (payment of filtered(); track payment.id) {
+        <tr>
+          <td>
+            <b style="font-weight:500">{{ payment.id }}</b>
+            <small style="display:block;color:var(--muted);font-size:12px">
+              {{ payment.at | dateFr: 'dayMonth' }} · {{ payment.at.split('T')[1] }}
+            </small>
+          </td>
+          <td>
+            <b style="font-weight:500">{{ payment.tenant }}</b>
+            <small style="display:block;color:var(--muted);font-size:12px">{{ payment.property }}</small>
+          </td>
+          <td>{{ managerName(payment.managerId) }}</td>
+          <td class="num" style="text-align:right">{{ payment.amount | fcfa: false }}</td>
+          <td class="num" style="text-align:right;font-weight:600">{{ payment.amount | fcfa: false }}</td>
+          <td><sol-pill [tone]="toneOf(payment.tone)">{{ payment.payoutState }}</sol-pill></td>
+        </tr>
+      } @empty {
+        <tr><td colspan="6" class="hint" style="text-align:center;padding:28px">Aucun encaissement ne correspond</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

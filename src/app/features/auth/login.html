@@ -1,0 +1,43 @@
+<app-auth-layout>
+  <form [formGroup]="form" (ngSubmit)="signIn()">
+    <div>
+      <h3>Connexion</h3>
+      <p>Accédez à l'espace d'administration Solimus.</p>
+    </div>
+
+    <label class="input">
+      <span>E-mail professionnel</span>
+      <span class="f"><input type="text" formControlName="login" autocomplete="username" /></span>
+    </label>
+
+    <label class="input">
+      <span>Mot de passe</span>
+      <span class="f">
+        <input [type]="passwordVisible() ? 'text' : 'password'" formControlName="password" autocomplete="current-password" />
+        <button type="button" class="reveal" (click)="togglePassword()"
+                [attr.aria-label]="passwordVisible() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'">
+          <sol-icon name="eye" [size]="17" />
+        </button>
+      </span>
+    </label>
+
+    @if (form.touched && form.invalid) {
+      <p class="error">Renseignez votre e-mail et votre mot de passe.</p>
+    }
+
+    <div class="row">
+      <label class="remember">
+        <input type="checkbox" formControlName="remember" />
+        <span class="box"><sol-icon name="check" [size]="12" strokeWidth="3" /></span>
+        Se souvenir de moi
+      </label>
+      <a class="link" routerLink="/mot-de-passe-oublie">Mot de passe oublié ?</a>
+    </div>
+
+    <button type="submit" class="btn btn-p submit">Se connecter</button>
+
+    <p class="hint-center">
+      Espace réservé à l'<b>équipe Solimus</b>. Gestionnaire ? Connectez-vous à <b>Solimus Gestion</b>.
+    </p>
+  </form>
+</app-auth-layout>

@@ -1,0 +1,134 @@
+<div class="ovl" (click)="close.emit()">
+  <div class="modal" [style.width.px]="620" (click)="$event.stopPropagation()">
+    @if (state() === 'done') {
+      <div class="mb" style="padding:30px 28px 10px;justify-items:center;text-align:center">
+        <span class="tint t-g" style="width:58px;height:58px;border-radius:50%">
+          <sol-icon name="check" [size]="28" />
+        </span>
+        <h4 style="margin:6px 0 0;font-size:19px;font-weight:600">Versement enregistré</h4>
+        <p style="margin:0;color:var(--muted);line-height:1.5">
+          @if (request(); as pending) {
+            La demande {{ pending.id }} est marquée comme versée. {{ managerName() }} est notifiée
+            et reçoit l'avis de versement.
+          } @else {
+            Le versement est enregistré. {{ managerName() }} est notifiée et reçoit l'avis de versement.
+          }
+        </p>
+        <div class="calc" style="width:100%;text-align:left">
+          <div><span>Versement</span><b>{{ payoutId() }}</b></div>
+          <div><span>Montant</span><span>{{ amount() | fcfa }}</span></div>
+          <div><span>Référence du virement</span><span>{{ reference() }}</span></div>
+          <div><span>Solde restant du gestionnaire</span><span>{{ remaining() | fcfa }}</span></div>
+        </div>
+      </div>
+      <div class="mf" style="justify-content:center">
+        <button type="button" class="btn btn-s" (click)="close.emit()">Fermer</button>
+        <button type="button" class="btn btn-p" (click)="close.emit()">
+          <sol-icon name="receipt" />Avis de versement
+        </button>
+      </div>
+    } @else {
+      <div class="mh">
+        <div>
+          <h4>{{ request() ? 'Marquer la demande comme versée' : 'Enregistrer un versement hors système' }}</h4>
+          <p>
+            @if (request(); as pending) {
+              {{ pending.id }} · demandée le {{ pending.requestedAt | dateFr }} par {{ pending.requestedBy }}
+            } @else {
+              Pour un virement déjà fait par Solimus en dehors de la plateforme
+            }
+          </p>
+        </div>
+        <button type="button" class="icon-btn" aria-label="Fermer" (click)="close.emit()"><sol-icon name="x" /></button>
+      </div>
+
+      <div class="mb">
+        <div class="alert al-o">
+          <sol-icon name="alert" />
+          <div>
+            <b>Aucun argent n'est envoyé depuis cet écran</b>
+            <small>Faites d'abord le virement depuis la banque ou Wave Business, puis enregistrez-le ici.</small>
+          </div>
+        </div>
+
+        <div class="grid g2" style="gap:12px">
+          <label class="input">
+            <span>Gestionnaire</span>
+            <span class="f" [class.ro]="locked()"><span class="v">{{ managerName() }}</span></span>
+          </label>
+          <label class="input">
+            <span>Montant versé</span>
+            <span class="f" [class.ro]="locked()">
+              <span class="v">{{ amount() | fcfa: false }}</span><span class="suf">FCFA</span>
+            </span>
+          </label>
+        </div>
+
+        <div class="calc">
+          <div><span>Solde disponible avant</span><span>{{ available() | fcfa: false }}</span></div>
+          <div><span>Ce versement</span><span>− {{ amount() | fcfa: false }}</span></div>
+          <div><span>Solde après</span><span>{{ remaining() | fcfa }}</span></div>
+        </div>
+
+        <div class="grid g2" style="gap:12px">
+          <label class="input">
+            <span>Compte crédité</span>
+            <span class="f sel"><span class="v">{{ account() }}</span><sol-icon name="chevd" [size]="16" /></span>
+          </label>
+          <label class="input">
+            <span>Date du virement</span>
+            <span class="f"><span class="v">16/10/2026 · 11:30</span></span>
+          </label>
+          <label class="input">
+            <span>Référence du virement <i class="req">*</i></span>
+            <span class="f focus">
+              <input type="text" [value]="reference()" (input)="reference.set(value($event))"
+                     aria-label="Référence du virement" />
+            </span>
+          </label>
+          <label class="input">
+            <span>Fait par</span>
+            <span class="f sel"><span class="v">Babacar Diouf · Finance</span><sol-icon name="chevd" [size]="16" /></span>
+          </label>
+        </div>
+
+        <div class="input">
+          <label>Preuve du virement <i class="req">*</i></label>
+          <div class="upl" style="padding:10px">
+            <div class="upl-f">
+              <span class="upl-file">
+                <span class="file f-img" style="width:26px;height:32px;font-size:8px">IMG</span>
+                <span><b>capture-wave-{{ referenceSlug() }}.png</b><small>240 Ko</small></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div>
+            <b>Virement effectué hors système</b>
+            <small>Je confirme que le montant a bien été envoyé au gestionnaire</small>
+          </div>
+          <sol-toggle [(checked)]="confirmed" label="Virement effectué" />
+        </div>
+
+        @if (needsDoubleApproval()) {
+          <div class="alert al-r">
+            <sol-icon name="shield" />
+            <div>
+              <b>Double validation requise</b>
+              <small>À partir de 5 000 000 FCFA, un second administrateur doit approuver le versement.</small>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="mf">
+        <button type="button" class="btn btn-s" (click)="close.emit()">Annuler</button>
+        <button type="button" class="btn btn-p" [disabled]="!canSubmit()" (click)="submit()">
+          <sol-icon name="check" />Marquer comme versé
+        </button>
+      </div>
+    }
+  </div>
+</div>
