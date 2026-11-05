@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'app-auth-layout',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="auth theme-admin">
+    <div class="auth">
       <section class="l">
         <div class="logo-block">
           <b>SOLIMUS</b>

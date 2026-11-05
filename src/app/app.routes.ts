@@ -3,17 +3,17 @@ import { Shell } from './core/layout/shell';
 
 export const routes: Routes = [
   {
-    path: 'connexion',
+    path: 'login',
     title: 'Connexion · Administration Solimus',
     loadComponent: () => import('./features/auth/login'),
   },
   {
-    path: 'connexion/verification',
+    path: 'login/verification',
     title: 'Vérification · Administration Solimus',
     loadComponent: () => import('./features/auth/otp-verification'),
   },
   {
-    path: 'mot-de-passe-oublie',
+    path: 'forgot-password',
     title: 'Mot de passe oublié · Administration Solimus',
     loadComponent: () => import('./features/auth/forgot-password'),
   },

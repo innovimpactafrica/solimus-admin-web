@@ -6,8 +6,6 @@ export * from './pipes/fcfa.pipe';
 export * from './pipes/amount-in-words.pipe';
 export * from './pipes/date-fr.pipe';
 export * from './components/kpi-card';
-export * from './components/bar-chart';
-export * from './components/donut-chart';
 export * from './components/toggle';
 export * from './components/segmented';
 export * from './components/toast';

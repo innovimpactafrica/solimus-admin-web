@@ -33,13 +33,10 @@
   <section class="card">
     <div class="card-h">
       <div><h4>Loyers encaissés et reversés</h4><p>Millions de FCFA</p></div>
-      <div class="legend">
-        <span><i style="background:#d9e4df"></i>Encaissés</span>
-        <span><i style="background:var(--g)"></i>Reversés</span>
-      </div>
     </div>
     <div class="card-b">
       <sol-bar-chart [data]="cashflow" [max]="80" [formatTick]="formatMillions"
+                     label="Reversés" referenceLabel="Encaissés"
                      ariaLabel="Loyers encaissés et reversés sur six mois" />
     </div>
   </section>

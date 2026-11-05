@@ -10,7 +10,7 @@
 .l {
   position: relative;
   background:
-    linear-gradient(180deg, rgba(17, 22, 24, .35), rgba(17, 22, 24, .9)),
+    linear-gradient(180deg, rgba(47, 74, 66, .25), rgba(47, 74, 66, .85)),
     url("/assets/property.jpg") 62% 30% / cover,
     var(--g-dark);
   color: #fff;
@@ -43,7 +43,7 @@
   display: block;
   font-style: italic;
   font-size: 15px;
-  letter-spacing: .16em;
+  letter-spacing: .12em;
   margin-top: 6px;
   opacity: .9;
 }

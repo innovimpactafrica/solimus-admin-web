@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } 
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import {
-  BreadcrumbService, DateFrPipe, FcfaPipe, IconName, SheetService, SolAvatar, SolBarChart, SolIcon, SolKpiCard, SolPill } from '@solimus/ui';
+  BreadcrumbService, DateFrPipe, FcfaPipe, IconName, SheetService, SolAvatar, SolIcon, SolKpiCard, SolPill } from '@solimus/ui';
+import { SolBarChart } from '@solimus/ui/charts';
 import { PLATFORM_REPOSITORY, planUsageStatus } from '@solimus/domain';
 import { PlanId } from '@solimus/domain/models/subscription.model';
 import { BLOCKED_PAYOUT, COLLECTIONS, MANAGERS, PLANS, PLATFORM_CASHFLOW, PLATFORM_SUMMARY } from '@solimus/mocks';

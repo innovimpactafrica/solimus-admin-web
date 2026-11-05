@@ -32,7 +32,7 @@ export default class Login {
       this.form.markAllAsTouched();
       return;
     }
-    void this.router.navigate(['/connexion/verification'], {
+    void this.router.navigate(['/login/verification'], {
       state: { login: this.form.controls.login.value },
     });
   }
